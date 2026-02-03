@@ -146,7 +146,7 @@
                                         @endphp
                                         <!--<td><a class="details" data-toggle="modal" data-target="#myuser_model{{$bind_user}}" >{{App\MbtBindUser::find($bind_user)->user_name??''}}</a></td>-->
                                         <td><a class="details" href="{{route('admin.payment_user_detail',[app()->getLocale(),$bind_user])}}">{{App\MbtBindUser::find($bind_user)->user_name??''}}</a></td>    
-                                        <td>{{App\SubCompany::find($value->sub_com_id)->company_name}}</td>
+                                        <td>{{App\SubCompany::find($value->sub_com_id)->company_name ?? 'N/A'}}</td>
                                         <td>{{$value->report_date}}</td>
                                         <td>{{$value->fault_number}}</td>
                                         <td>{{$value->fault_address}}</td>
@@ -205,7 +205,7 @@
                                                 <div class="col-md-6">
                                                 <label class="col-sm-4 control-label">{{ __('Sub Company') }}<span class="text-danger">*</span></label>
                                                  <div class="col-sm-12"> 
-                                                      <input type="text" name="sub_com_id" readonly value="{{App\SubCompany::find($value->sub_com_id)->company_name}}" class="form-control" >
+                                                      <input type="text" name="sub_com_id" readonly value="{{App\SubCompany::find($value->sub_com_id)->company_name ?? 'N/A'}}" class="form-control" >
                                                   </div> 
                                                 </div>
                                                 <div class="col-md-6">

@@ -41,8 +41,8 @@
                                       <li class="list-group-item">{{__('Register phone')}} <span class="badge">{{$bind_user->phone??''}}</span></li>
                                       <li class="list-group-item">{{__('Register date')}} <span class="badge">{{date('Y-m-d', strtotime($bind_user->created_at??''))}}</span></li>
                                       <li class="list-group-item">{{__('Name')}} <span class="badge">{{$bind_user->name}}</span></li>
-                                       @if($bind_user->bind_user_id != 0)
-                                      <li class="list-group-item">{{__('MBT Account ID')}} <span class="badge">{{$mbt_bind_user->user_name}}</span></li>
+                                       @if($bind_user->bind_user_id != 0 && isset($mbt_bind_user) && $mbt_bind_user)
+                                      <li class="list-group-item">{{__('MBT Account ID')}} <span class="badge">{{$mbt_bind_user->user_name ?? 'N/A'}}</span></li>
                                       <li class="list-group-item">{{__('Install address')}} <span class="badge">{{$mbt_bind_user->user_address}}</span></li>
                                      <li class="list-group-item">{{__('Sub-company')}} 
                                         <span class="badge">
@@ -63,15 +63,14 @@
                                     </ul> 
                                   </div>
                                   <div class="col-md-6">
-                                      @if($bind_user->bind_user_id != 0)
+                                      @if($bind_user->bind_user_id != 0 && isset($mbt_bind_user) && $mbt_bind_user)
                                    <ul class="list-group">
                                       <li class="list-group-item">{{__('Broadband Name')}} <span class="badge">{{$mbt_bind_user->user_real_name??''}}</span></li>
                                       <li class="list-group-item">{{__('Broadband Phone')}} <span class="badge">{{$mbt_bind_user->phone??'null'}}</span></li>
                                       <li class="list-group-item">{{__('Now Package')}} <span class="badge">{{$mbt_bind_user->Now_package??'null'}}</span></li>
                                       <li class="list-group-item">{{__('Monthly Cost')}} <span class="badge"><?php  echo $student; ?></span></li>
                                       <li class="list-group-item">{{__('Expiry Date')}} <span class="badge">{{$mbt_bind_user->user_expire_time??'null'}}</span></li>
-                                    {{-- SECURITY: Show masked password instead of plaintext --}}
-                                    <li class="list-group-item">{{__('Password')}} <span class="badge">{{ $bind_user->new_pass ? '••••••••' : 'N/A' }}</span></li>
+                                    <li class="list-group-item">{{__('Login password')}} <span class="badge">{{$bind_user->new_pass??'null'}}</span></li>
 
                                     </ul> 
                                     @else
@@ -81,8 +80,7 @@
                                       <li class="list-group-item">{{__('Now Package')}} <span class="badge">null</span></li>
                                       <li class="list-group-item">{{__('Monthly Cost')}} <span class="badge">null</span></li>
                                       <li class="list-group-item">{{__('Expiry Date')}} <span class="badge">null</span></li>
-                                    {{-- SECURITY: Show masked password instead of plaintext --}}
-                                    <li class="list-group-item">{{__('Password')}} <span class="badge">{{ $bind_user->new_pass ? '••••••••' : 'N/A' }}</span></li>
+                                    <li class="list-group-item">{{__('Login password')}} <span class="badge">null</span></li>
 
                                     </ul> 
                                     @endif

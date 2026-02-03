@@ -29,20 +29,25 @@ class BindUserController extends Controller
             $bindUsers = [];
             
             if ($user->bind_user_id) {
-                $mbtBindUser = MbtBindUser::find($user->bind_user_id);
+                // Use 'id' column instead of primary key (er_id)
+                $mbtBindUser = MbtBindUser::where('id', $user->bind_user_id)->first();
                 if ($mbtBindUser) {
                     $bindUsers[] = $this->formatBindUser($mbtBindUser);
                 }
             }
             
             // Also get from bind_history table
-            $bindHistory = Binduser::where('user_id', $user->id)->get();
+            $bindHistory = Binduser::where('user_id', $user->id)->where('status', 1)->get();
             foreach ($bindHistory as $bind) {
-                $mbtUser = MbtBindUser::find($bind->bind_user_id);
-                if ($mbtUser) {
-                    $formatted = $this->formatBindUser($mbtUser);
-                    $formatted['bind_id'] = $bind->id;
-                    $bindUsers[] = $formatted;
+                // Parse bind_data JSON to get the mbt_user_id
+                $bindData = json_decode($bind->bind_data, true);
+                if ($bindData && isset($bindData['mbt_user_id'])) {
+                    $mbtUser = MbtBindUser::where('mbt_user_id', $bindData['mbt_user_id'])->first();
+                    if ($mbtUser && !in_array($mbtUser->id, array_column($bindUsers, 'id'))) {
+                        $formatted = $this->formatBindUser($mbtUser);
+                        $formatted['bind_id'] = $bind->id;
+                        $bindUsers[] = $formatted;
+                    }
                 }
             }
 
@@ -68,8 +73,8 @@ class BindUserController extends Controller
         try {
             $user = $request->user();
             
-            // Verify user has access to this bind user
-            $mbtBindUser = MbtBindUser::find($id);
+            // Verify user has access to this bind user - use 'id' column
+            $mbtBindUser = MbtBindUser::where('id', $id)->first();
             
             if (!$mbtBindUser) {
                 return $this->notFoundResponse('Bound user not found.');
@@ -77,8 +82,14 @@ class BindUserController extends Controller
             
             // Check if user owns this binding
             if ($user->bind_user_id != $id) {
+                // Check bind_history for this user
                 $bindRecord = Binduser::where('user_id', $user->id)
-                    ->where('bind_user_id', $id)
+                    ->where('status', 1)
+                    ->get()
+                    ->filter(function($bind) use ($mbtBindUser) {
+                        $bindData = json_decode($bind->bind_data, true);
+                        return $bindData && isset($bindData['mbt_user_id']) && $bindData['mbt_user_id'] == $mbtBindUser->mbt_user_id;
+                    })
                     ->first();
                     
                 if (!$bindRecord) {
@@ -198,6 +209,9 @@ class BindUserController extends Controller
      */
     protected function formatBindUser($mbtUser): array
     {
+        // Look up package name from packages table based on bandwidth
+        $packageName = $this->getPackageName($mbtUser->Bandwidth, $mbtUser->Monthly_Cost, $mbtUser->Service_type);
+        
         return [
             'id' => $mbtUser->id,
             'account_id' => $mbtUser->user_id,
@@ -205,12 +219,55 @@ class BindUserController extends Controller
             'real_name' => $mbtUser->user_real_name,
             'phone' => $mbtUser->phone ?? $mbtUser->Phone_number,
             'address' => $mbtUser->user_address,
-            'package' => $mbtUser->Now_package ?? null,
+            'package' => $packageName,
             'monthly_cost' => $mbtUser->Monthly_Cost,
             'expire_time' => $mbtUser->user_expire_time,
             'status' => $mbtUser->user_status_mbt,
             'balance' => $mbtUser->balance,
+            'bandwidth' => $mbtUser->Bandwidth,
+            'service_type' => $mbtUser->Service_type,
+            'sub_company' => $mbtUser->Sub_company,
         ];
+    }
+
+    /**
+     * Get package name based on bandwidth and monthly cost.
+     */
+    protected function getPackageName($bandwidth, $monthlyCost, $serviceType = null): string
+    {
+        if (!$bandwidth) {
+            return 'Unknown Package';
+        }
+        
+        // Try to find matching package from packages table
+        $package = \App\Package::where('speed', $bandwidth)->first();
+        
+        if ($package) {
+            return $package->name;
+        }
+        
+        // If no exact match, try to construct a friendly name
+        // Clean up bandwidth (remove " Mbps" suffix if present)
+        $speed = preg_replace('/\s*Mbps/i', '', $bandwidth);
+        
+        // Determine package tier based on service type or monthly cost
+        if ($serviceType && strtolower($serviceType) === 'dedicated') {
+            return "Business {$speed} Mbps";
+        } elseif ($monthlyCost && (float)$monthlyCost >= 80000) {
+            return "Business {$speed} Mbps";
+        } else {
+            // Map common speeds to package names
+            $speedPackageMap = [
+                '10' => 'Basic Home',
+                '20' => 'Student Special',
+                '30' => 'Standard Home',
+                '50' => 'Premium Home',
+                '100' => 'Ultra Home',
+                '200' => 'Enterprise',
+            ];
+            
+            return $speedPackageMap[$speed] ?? "{$speed} Mbps Package";
+        }
     }
 
     /**
@@ -231,6 +288,16 @@ class BindUserController extends Controller
             'gps' => $mbtUser->GPS,
             'last_online' => $mbtUser->last_online,
             'last_offline' => $mbtUser->last_offline,
+            // Router/Network Info
+            'odb_box' => $mbtUser->ODB_Box,
+            'pon' => $mbtUser->Pon,
+            'loid' => $mbtUser->LOID,
+            'fiber_length' => $mbtUser->Fiber_length,
+            'optical_power' => $mbtUser->Optical_power,
+            'odb_rx_power' => $mbtUser->ODB_RX_Power,
+            'odb_gps' => $mbtUser->ODB_GPS,
+            'lan' => $mbtUser->LAN,
+            'speed_test' => $mbtUser->Speed_Test,
         ]);
     }
 }

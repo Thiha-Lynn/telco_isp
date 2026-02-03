@@ -129,6 +129,7 @@ class DashboardController extends Controller
     {
         $settings = Setting::where('id', '1')->first();
         $data['base_url'] = $settings->ip_address;
+        $data["access_token"] = ""; // Initialize access_token
         
         $url = $data['base_url']."api/v1/auth/get-access-token"; 
         $headerArray =array("Content-type:application/json","Accept:application/json");
@@ -317,6 +318,7 @@ class DashboardController extends Controller
         
         $settings = Setting::where('id', '1')->first();
         $data['base_url'] = $settings->ip_address;
+        $data["access_token"] = ""; // Initialize access_token
         
         $url = $data['base_url']."api/v1/auth/get-access-token"; 
         $headerArray =array("Content-type:application/json","Accept:application/json");
@@ -1045,10 +1047,19 @@ public function search_install_query(Request $request)
     public function user_details($ln,$id)
     {
         $data['bind_user'] = DB::table('users')->where('id',$id)->first();
+        $data['mbt_bind_user'] = null; // Initialize to prevent undefined variable error
+        $student = ''; // Initialize student variable
+        
+        if (!$data['bind_user']) {
+            return redirect()->back()->with('error', 'User not found');
+        }
+        
         $mbt_bind = DB::table('mbt_bind_user')->where('er_id',$data['bind_user']->bind_user_id)->first();
+        $data['mbt_bind_user'] = $mbt_bind; // Always set this variable
+        
         if(empty($mbt_bind))
         {
-            return view('admin.user.details',$data);
+            return view('admin.user.details',$data, compact('student'));
         }
         else
         {

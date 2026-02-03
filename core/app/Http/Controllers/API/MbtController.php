@@ -1190,7 +1190,7 @@ class MbtController extends Controller
         $url             = "api/v1/user/view?".$data; 
         $output          = $this->GetFunction($url);
         $decode          = json_decode($output,true);
-        if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+        if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
         {    
             $UserCheck   = User::where('id',$request->user_id)->first();
             
@@ -1340,8 +1340,9 @@ class MbtController extends Controller
       $url          = "api/v1/package/users-packages?".$data; 
       $output       = $this->GetFunction($url);
       $decode       = json_decode($output,true);
-      $MbtUser      = MbtBindUser::where('user_name',$user_name)->first()->user_expire_time??'';
-      if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+      $MbtUserObj   = MbtBindUser::where('user_name',$user_name)->first();
+      $MbtUser      = $MbtUserObj ? $MbtUserObj->user_expire_time : '';
+      if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
       {
            $PackageName = $decode['data'][0]['billing_name'];
            $explode     = explode(" ",$PackageName); //Explode package name for get price
@@ -1583,7 +1584,7 @@ class MbtController extends Controller
     //         $output                     = $this->PostFunction($url,$dataobj);
     //         $decode                     = json_decode($output,true);
     //         $data = [];
-    //         if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //         if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //         {
     //             $data['access_token']       = $access_token;
     //             $data['user_name']          = $pay_details->user_name;
@@ -1651,7 +1652,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $pay_details->user_name;
@@ -1753,7 +1754,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $pay_details->user_name;
@@ -1796,7 +1797,7 @@ class MbtController extends Controller
     //             $output                     = $this->PostFunction($url,$dataobj);
     //             $decode                     = json_decode($output,true);
     //             $data = [];
-    //             if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //             if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //             {
     //                 $data['access_token']       = $access_token;
     //                 $data['user_name']          = $pay_details->user_name;
@@ -1865,7 +1866,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $pay_details->user_name;
@@ -1972,7 +1973,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $pay_details->user_name;
@@ -2054,7 +2055,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $pay_details->user_name;
@@ -2105,7 +2106,7 @@ class MbtController extends Controller
     //         //     $output                     = $this->PostFunction($url,$dataobj);
     //         //     $decode                     = json_decode($output,true);
     //         //     $data = [];
-    //         //     if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //         //     if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //         //     {
     //         //         $data['access_token']       = $access_token;
     //         //         $data['user_name']          = $pay_details->user_name;
@@ -2176,7 +2177,7 @@ class MbtController extends Controller
                     $output                     = $this->PostFunction($url,$dataobj);
                     $decode                     = json_decode($output,true);
                     $data = [];
-                    if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                    if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                     {
                         $data['access_token']       = $access_token;
                         $data['user_name']          = $pay_details->user_name;
@@ -2282,7 +2283,7 @@ class MbtController extends Controller
                     $output                     = $this->PostFunction($url,$dataobj);
                     $decode                     = json_decode($output,true);
                     $data = [];
-                    if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                    if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                     {
                         $data['access_token']       = $access_token;
                         $data['user_name']          = $pay_details->user_name;
@@ -2362,7 +2363,7 @@ class MbtController extends Controller
                     $output                     = $this->PostFunction($url,$dataobj);
                     $decode                     = json_decode($output,true);
                     $data = [];
-                    if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                    if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                     {
                         $data['access_token']       = $access_token;
                         $data['user_name']          = $pay_details->user_name;
@@ -2718,7 +2719,7 @@ class MbtController extends Controller
     //         // $output                     = $this->PostFunction($url,$dataobj);
     //         // $decode                     = json_decode($output,true);
     //         // $data = [];
-    //         // if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //         // if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //         // {
     //         //     $data['access_token']       = $access_token;
     //         //     $data['user_name']          = $pay_details->user_name;
@@ -2823,7 +2824,7 @@ class MbtController extends Controller
                 $output                     = $this->PostFunction($url,$dataobj);
                 $decode                     = json_decode($output,true);
                 $data = [];
-                if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                 {
                     $data['access_token']       = $access_token;
                     $data['user_name']          = $pay_details->user_name;
@@ -3542,7 +3543,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $user_name;
@@ -3614,7 +3615,7 @@ class MbtController extends Controller
     //                 $output                     = $this->PostFunction($url,$dataobj);
     //                 $decode                     = json_decode($output,true);
     //                 $data = [];
-    //                 if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+    //                 if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
     //                 {
     //                     $data['access_token']       = $access_token;
     //                     $data['user_name']          = $pay_details->user_name;
@@ -3734,7 +3735,7 @@ class MbtController extends Controller
                     $output                     = $this->PostFunction($url,$dataobj);
                     $decode                     = json_decode($output,true);
                     $data = [];
-                    if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                    if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                     {
                         $data['access_token']       = $access_token;
                         $data['user_name']          = $user_name;
@@ -3804,7 +3805,7 @@ class MbtController extends Controller
                     $output                     = $this->PostFunction($url,$dataobj);
                     $decode                     = json_decode($output,true);
                     $data = [];
-                    if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                    if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                     {
                         $data['access_token']       = $access_token;
                         $data['user_name']          = $user_name;
@@ -3853,7 +3854,7 @@ class MbtController extends Controller
                     $output                     = $this->PostFunction($url,$dataobj);
                     $decode                     = json_decode($output,true);
                     $data = [];
-                    if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+                    if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
                     {
                         $data['access_token']       = $access_token;
                         $data['user_name']          = $user_name;
@@ -4549,7 +4550,7 @@ class MbtController extends Controller
             // $output                     = $this->PostFunction($url,$dataobj);
             // $decode                     = json_decode($output,true);
             // $data = [];
-            // if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+            // if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
             // {
             //     $data['access_token']       = $access_token;
             //     $data['user_name']          = $pay_details->user_name;
@@ -4861,7 +4862,7 @@ class MbtController extends Controller
         $url          = "api/v1/package/users-packages?".$data; 
         $output       = $this->GetFunction($url);
         $decode       = json_decode($output,true);
-        if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+        if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
         {
             $discount = $this->discount;
             $commercial_tax = $this->commercial_tax;
@@ -4897,7 +4898,8 @@ class MbtController extends Controller
         $url          = "api/v1/package/users-packages?".$data; 
         $output       = $this->GetFunction($url);
         $decode       = json_decode($output,true);
-        $MbtUser      = MbtBindUser::where('user_name',$user_name)->first()->user_expire_time??'';
+        $MbtUserObj   = MbtBindUser::where('user_name',$user_name)->first();
+      $MbtUser      = $MbtUserObj ? $MbtUserObj->user_expire_time : '';
         
         $Currurl             = "api/v1/user/view?".$data; 
         $Curroutput          = $this->GetFunction($Currurl);
@@ -4919,7 +4921,7 @@ class MbtController extends Controller
             }
         }
         
-        if(isset($decode["code"]) && $decode["code"] == 0 && isset($decode["data"][0]["billing_name"]))
+        if(isset($decode['code']) && $decode['code'] == 0 && isset($decode['data'][0]['billing_name']))
         {
             $PackageName = $decode['data'][0]['billing_name'];
             $explode     = explode(" ",$PackageName); //Explode package name for get price

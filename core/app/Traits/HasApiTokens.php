@@ -2,24 +2,22 @@
 
 namespace App\Traits;
 
-use App\PersonalAccessToken;
+use App\Models\PersonalAccessToken;
+use DateTimeInterface;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 trait HasApiTokens
 {
     /**
      * The access token the user is using for the current request.
-     *
-     * @var \App\PersonalAccessToken|null
      */
-    protected $accessToken;
+    protected ?PersonalAccessToken $accessToken = null;
 
     /**
      * Get the access tokens that belong to the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function tokens()
+    public function tokens(): MorphMany
     {
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
     }
@@ -27,12 +25,10 @@ trait HasApiTokens
     /**
      * Create a new personal access token for the user.
      *
-     * @param  string  $name
-     * @param  array  $abilities
-     * @param  \DateTimeInterface|null  $expiresAt
-     * @return array
+     * @param  array<int, string>  $abilities
+     * @return array{accessToken: PersonalAccessToken, plainTextToken: string}
      */
-    public function createToken(string $name, array $abilities = ['*'], $expiresAt = null)
+    public function createToken(string $name, array $abilities = ['*'], ?DateTimeInterface $expiresAt = null): array
     {
         $plainTextToken = Str::random(64);
         
@@ -51,21 +47,16 @@ trait HasApiTokens
 
     /**
      * Get the current access token being used.
-     *
-     * @return \App\PersonalAccessToken|null
      */
-    public function currentAccessToken()
+    public function currentAccessToken(): ?PersonalAccessToken
     {
         return $this->accessToken;
     }
 
     /**
      * Set the current access token for the user.
-     *
-     * @param  \App\PersonalAccessToken  $accessToken
-     * @return $this
      */
-    public function withAccessToken($accessToken)
+    public function withAccessToken(PersonalAccessToken $accessToken): static
     {
         $this->accessToken = $accessToken;
         
@@ -74,23 +65,17 @@ trait HasApiTokens
 
     /**
      * Revoke all tokens for the user.
-     *
-     * @return void
      */
-    public function revokeAllTokens()
+    public function revokeAllTokens(): void
     {
         $this->tokens()->delete();
     }
 
     /**
      * Revoke the current token.
-     *
-     * @return void
      */
-    public function revokeCurrentToken()
+    public function revokeCurrentToken(): void
     {
-        if ($this->accessToken) {
-            $this->accessToken->delete();
-        }
+        $this->accessToken?->delete();
     }
 }

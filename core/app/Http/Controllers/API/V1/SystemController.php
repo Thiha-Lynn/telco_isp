@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponse;
-use App\Slider;
-use App\Setting;
-use App\MaintenanceSetting;
+use App\Models\Slider;
+use App\Models\Setting;
+use App\Models\MaintenanceSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 

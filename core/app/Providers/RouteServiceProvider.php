@@ -2,88 +2,67 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to your controller routes.
+     * The path to your application's "home" route.
      *
-     * In addition, it is set as the URL generator's root namespace.
+     * Typically, users are redirected here after authentication.
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    public const HOME = '/en/admin/dashboard';
 
     /**
-     * Define your route model bindings, pattern filters, etc.
+     * The controller namespace for the application.
      *
-     * @return void
+     * When present, controller route declarations will automatically be prefixed with this namespace.
+     *
+     * @var string|null
      */
-    public function boot()
-    {
-        //
-
-        parent::boot();
-    }
+    protected $namespace = 'App\\Http\\Controllers';
 
     /**
-     * Define the routes for the application.
-     *
-     * @return void
+     * Define your route model bindings, pattern filters, and other route configuration.
      */
-    public function map()
+    public function boot(): void
     {
-        $this->mapApiRoutes();
-        $this->mapApiV1Routes();
-        $this->mapWebRoutes();
+        // Set default URL parameters for locale - this ensures all route() calls
+        // automatically include the current locale without needing to specify it
+        $this->app->booted(function () {
+            $locale = request()->segment(1);
+            if (in_array($locale, config('app.available_locales', ['en', 'zh']))) {
+                URL::defaults(['locale' => $locale]);
+            } else {
+                URL::defaults(['locale' => config('app.locale', 'en')]);
+            }
+        });
 
-        //
-    }
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
 
-    /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
-    protected function mapWebRoutes()
-    {
-        Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
-    }
+        $this->routes(function () {
+            Route::middleware('api')
+                ->prefix('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/api.php'));
 
-    /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
-     * Legacy API routes - kept for backward compatibility.
-     *
-     * @return void
-     */
-    protected function mapApiRoutes()
-    {
-        Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
-    }
+            Route::middleware('api')
+                ->prefix('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/api_v1.php'));
 
-    /**
-     * Define the "api/v1" routes for the application.
-     *
-     * New secure API with proper authentication.
-     *
-     * @return void
-     */
-    protected function mapApiV1Routes()
-    {
-        Route::prefix('api')
-             ->middleware(['api', \Fruitcake\Cors\HandleCors::class])
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api_v1.php'));
+            Route::middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
+        });
     }
 }

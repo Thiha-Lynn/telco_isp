@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Language;
+use App\Models\Language;
 
 class SetLangMiddleware
 {

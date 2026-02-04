@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Emailsetting;
-use App\Setting;
-use App\Language;
-use App\Newsletter;
+use App\Models\Emailsetting;
+use App\Models\Setting;
+use App\Models\Language;
+use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -45,7 +45,7 @@ class NewsletterController extends Controller
     }
 
     // newsletter Category Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $newsletter = Newsletter::find($id);
         $newsletter->delete();
@@ -54,7 +54,7 @@ class NewsletterController extends Controller
     }
 
     // newsletter Category Edit
-    public function edit($id){
+    public function edit($locale, $id){
 
         $newsletter = Newsletter::find($id);
         return view('admin.newsletter.edit', compact('newsletter'));
@@ -62,7 +62,7 @@ class NewsletterController extends Controller
     }
 
     // Update newsletter Category
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
          $request->validate([

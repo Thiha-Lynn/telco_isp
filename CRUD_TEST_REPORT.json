@@ -1,0 +1,282 @@
+{
+  "timestamp": "2026-02-04T11:16:46.273648",
+  "summary": {
+    "total": 54,
+    "passed": 54,
+    "failed": 0,
+    "skipped": 0,
+    "success_rate": "100.0%"
+  },
+  "details": [
+    {
+      "name": "READ About List",
+      "status": "PASS",
+      "note": "50576B"
+    },
+    {
+      "name": "READ Slider List",
+      "status": "PASS",
+      "note": "47553B"
+    },
+    {
+      "name": "READ Package List",
+      "status": "PASS",
+      "note": "60072B"
+    },
+    {
+      "name": "READ Package Orders",
+      "status": "PASS",
+      "note": "49778B"
+    },
+    {
+      "name": "READ Service List",
+      "status": "PASS",
+      "note": "48875B"
+    },
+    {
+      "name": "READ Blog List",
+      "status": "PASS",
+      "note": "49534B"
+    },
+    {
+      "name": "READ Blog Categories",
+      "status": "PASS",
+      "note": "43602B"
+    },
+    {
+      "name": "READ Product List",
+      "status": "PASS",
+      "note": "44878B"
+    },
+    {
+      "name": "READ Product Orders",
+      "status": "PASS",
+      "note": "36905B"
+    },
+    {
+      "name": "READ Team List",
+      "status": "PASS",
+      "note": "45852B"
+    },
+    {
+      "name": "READ FAQ List",
+      "status": "PASS",
+      "note": "49508B"
+    },
+    {
+      "name": "READ Testimonial List",
+      "status": "PASS",
+      "note": "50719B"
+    },
+    {
+      "name": "READ Registered Users",
+      "status": "PASS",
+      "note": "37322B"
+    },
+    {
+      "name": "READ User Queries",
+      "status": "PASS",
+      "note": "43883B"
+    },
+    {
+      "name": "READ Bind Users",
+      "status": "PASS",
+      "note": "47433B"
+    },
+    {
+      "name": "READ Payment Gateways",
+      "status": "PASS",
+      "note": "43044B"
+    },
+    {
+      "name": "READ Payment Query",
+      "status": "PASS",
+      "note": "74217B"
+    },
+    {
+      "name": "READ Bill Pay",
+      "status": "PASS",
+      "note": "49684B"
+    },
+    {
+      "name": "READ Fault Queries",
+      "status": "PASS",
+      "note": "74568B"
+    },
+    {
+      "name": "READ Basic Info",
+      "status": "PASS",
+      "note": "52856B"
+    },
+    {
+      "name": "READ Bank Settings",
+      "status": "PASS",
+      "note": "74455B"
+    },
+    {
+      "name": "READ Email Config",
+      "status": "PASS",
+      "note": "41953B"
+    },
+    {
+      "name": "READ Languages",
+      "status": "PASS",
+      "note": "36697B"
+    },
+    {
+      "name": "READ Currencies",
+      "status": "PASS",
+      "note": "41414B"
+    },
+    {
+      "name": "READ Offers",
+      "status": "PASS",
+      "note": "50592B"
+    },
+    {
+      "name": "READ Promotions",
+      "status": "PASS",
+      "note": "44811B"
+    },
+    {
+      "name": "READ Entertainment",
+      "status": "PASS",
+      "note": "47867B"
+    },
+    {
+      "name": "READ Media",
+      "status": "PASS",
+      "note": "48863B"
+    },
+    {
+      "name": "READ Branches",
+      "status": "PASS",
+      "note": "46293B"
+    },
+    {
+      "name": "READ Funfacts",
+      "status": "PASS",
+      "note": "45676B"
+    },
+    {
+      "name": "READ Dynamic Pages",
+      "status": "PASS",
+      "note": "43619B"
+    },
+    {
+      "name": "READ Social Links",
+      "status": "PASS",
+      "note": "46092B"
+    },
+    {
+      "name": "READ Newsletter Subscribers",
+      "status": "PASS",
+      "note": "43100B"
+    },
+    {
+      "name": "READ Mail Subscribers",
+      "status": "PASS",
+      "note": "37554B"
+    },
+    {
+      "name": "READ Maintenance Settings",
+      "status": "PASS",
+      "note": "39197B"
+    },
+    {
+      "name": "READ Role Management",
+      "status": "PASS",
+      "note": "37220B"
+    },
+    {
+      "name": "READ Permissions",
+      "status": "PASS",
+      "note": "40404B"
+    },
+    {
+      "name": "READ Shipping Methods",
+      "status": "PASS",
+      "note": "42234B"
+    },
+    {
+      "name": "READ App Banners",
+      "status": "PASS",
+      "note": "41878B"
+    },
+    {
+      "name": "READ CB Pay Config",
+      "status": "PASS",
+      "note": "37485B"
+    },
+    {
+      "name": "READ KBZ Pay Config",
+      "status": "PASS",
+      "note": "37482B"
+    },
+    {
+      "name": "READ Wave Pay Config",
+      "status": "PASS",
+      "note": "37499B"
+    },
+    {
+      "name": "READ Extra Months",
+      "status": "PASS",
+      "note": "40863B"
+    },
+    {
+      "name": "READ Error Messages",
+      "status": "PASS",
+      "note": "77886B"
+    },
+    {
+      "name": "READ Section Titles",
+      "status": "PASS",
+      "note": "36215B"
+    },
+    {
+      "name": "READ SEO Info",
+      "status": "PASS",
+      "note": "38503B"
+    },
+    {
+      "name": "READ Scripts",
+      "status": "PASS",
+      "note": "39164B"
+    },
+    {
+      "name": "READ Custom CSS",
+      "status": "PASS",
+      "note": "37427B"
+    },
+    {
+      "name": "READ Cookie Alert",
+      "status": "PASS",
+      "note": "37886B"
+    },
+    {
+      "name": "READ Page Visibility",
+      "status": "PASS",
+      "note": "54303B"
+    },
+    {
+      "name": "READ Search Users",
+      "status": "PASS",
+      "note": "53536B"
+    },
+    {
+      "name": "READ Search Bind Users",
+      "status": "PASS",
+      "note": "39676B"
+    },
+    {
+      "name": "READ Search Payment Records",
+      "status": "PASS",
+      "note": "73150B"
+    },
+    {
+      "name": "READ Search Fault Queries",
+      "status": "PASS",
+      "note": "69587B"
+    }
+  ]
+}

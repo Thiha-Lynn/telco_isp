@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Language;
-use App\Shipping;
+use App\Models\Language;
+use App\Models\Shipping;
 use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,7 +29,9 @@ class ShippingMethodController extends Controller
 
     //Add Method
     public function add(){
-        return view('admin.shipping.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.shipping.add', compact('langs', 'currentLang'));
     }
 
     // Store Method
@@ -59,7 +61,7 @@ class ShippingMethodController extends Controller
     }
 
     //Method Delete
-    public function delete($id){
+    public function delete($locale, $id){
         $method = Shipping::find($id);
         $method->delete();
 
@@ -67,15 +69,16 @@ class ShippingMethodController extends Controller
     }
 
     //Method Delete
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $method = Shipping::find($id);
-        return view('admin.shipping.edit', compact('method'));
+        return view('admin.shipping.edit', compact('method', 'langs', 'currentLang'));
 
     }
 
     // Method Update
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $request->validate([
             'language_id' => 'required',

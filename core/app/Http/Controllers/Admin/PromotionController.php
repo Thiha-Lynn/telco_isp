@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Language;
-use App\Promotion;
+use App\Models\Language;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
-use App\ExtraMonth;
+use App\Models\ExtraMonth;
 
 class PromotionController extends Controller
 {
@@ -73,7 +73,7 @@ class PromotionController extends Controller
         return view('admin.promotions.edit', compact('promotion'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
         $request->validate([

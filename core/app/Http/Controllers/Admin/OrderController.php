@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
-use App\Billpaid;
-use App\Packageorder;
+use App\Models\User;
+use App\Models\Billpaid;
+use App\Models\Packageorder;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Package;
-use Barryvdh\DomPDF\Facade as PDF;
-use App\Emailsetting;
+use App\Models\Package;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use App\Models\Emailsetting;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Auth;

@@ -79,9 +79,9 @@
                                             
                                             <td>{{ $mbt_bind->user_real_name??'Null' }}</td>
                                            
-                                            <td>{{App\User::Where('id',$value->user_id)->first()->phone??''}}</td> 
+                                            <td>{{App\Models\User::Where('id',$value->user_id)->first()->phone??''}}</td> 
                                           
-                                            <td>{{App\User::Where('id',$value->user_id)->first()->created_at??''}}</td> 
+                                            <td>{{App\Models\User::Where('id',$value->user_id)->first()->created_at??''}}</td> 
     
                                         
                                             <td>{{$value->bind_date??'Null'}}</td> 

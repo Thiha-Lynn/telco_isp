@@ -25,14 +25,14 @@
                             <div class="card-header">
                                 <h3 class="card-title mt-1">{{ __('App Page') }}</h3>
                                 <div class="card-tools">
-                                    <a href="{{ route('admin.dynamic_page'). '?language=' . $currentLang->code }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('admin.dynamic-page', app()->getLocale()). '?language=' . $currentLang->code }}" class="btn btn-primary btn-sm">
                                         <i class="fas fa-angle-double-left"></i> {{ __('Back') }}
                                     </a>
                                 </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <form class="form-horizontal" action="{{ route('admin.dynamic_page.store') }}" method="POST">
+                                <form class="form-horizontal" action="{{ route('admin.dynamic_page.store', app()->getLocale()) }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="language_id" value="1">
                                     <!--div class="form-group row">

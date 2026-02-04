@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Currency;
-use App\Language;
+use App\Models\Currency;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -30,7 +30,9 @@ class CurrencyController extends Controller
     //*** GET Request
     public function add()
     {
-        return view('admin.currency.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.currency.add', compact('langs', 'currentLang'));
     }
 
     //*** POST Request
@@ -56,14 +58,16 @@ class CurrencyController extends Controller
     }
 
     //*** GET Request
-    public function edit($id)
+    public function edit($locale, $id)
     {
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $currency  = Currency::findOrFail($id);
-        return view('admin.currency.edit',compact('currency'));
+        return view('admin.currency.edit', compact('currency', 'langs', 'currentLang'));
     }
 
     //*** POST Request
-    public function update(Request $request, $id)
+    public function update(Request $request, $locale, $id)
     {
     
         $request->validate([

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Faq;
+use App\Models\Faq;
 use Session;
-use App\Language;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
@@ -32,7 +32,9 @@ class FaqController extends Controller
 
     // Add Faq
     public function add(){
-        return view('admin.faq.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.faq.add', compact('langs', 'currentLang'));
     }
 
     // Store Faq
@@ -58,7 +60,7 @@ class FaqController extends Controller
     }
 
     // Faq Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $faq = Faq::find($id);
         $faq->delete();
@@ -67,15 +69,24 @@ class FaqController extends Controller
     }
 
     // Faq Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $faq = Faq::find($id);
-        return view('admin.faq.edit', compact('faq'));
-
+        
+        if (!$faq) {
+            $notification = array(
+                'messege' => 'FAQ not found!',
+                'alert' => 'error'
+            );
+            return redirect(route('admin.faq'))->with('notification', $notification);
+        }
+        
+        return view('admin.faq.edit', compact('faq', 'langs', 'currentLang'));
     }
 
     // Update Faq
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
          $request->validate([

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Service;
-use App\Language;
-use App\Sectiontitle;
+use App\Models\Service;
+use App\Models\Language;
+use App\Models\Sectiontitle;
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -36,7 +36,9 @@ class ServiceController extends Controller
 
     // Add Service
     public function add(){
-        return view('admin.service.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.service.add', compact('langs', 'currentLang'));
     }
 
     // Store Service
@@ -101,7 +103,7 @@ class ServiceController extends Controller
     }
 
     // Service Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $service = Service::find($id);
         @unlink('assets/front/img/'. $service->icon);
@@ -111,15 +113,16 @@ class ServiceController extends Controller
     }
 
     // Service Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $service = Service::find($id);
-        return view('admin.service.edit', compact('service'));
+        return view('admin.service.edit', compact('service', 'langs', 'currentLang'));
 
     }
 
     // Update Service
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $slug = Helper::make_slug($request->name);
         $services = Service::select('slug')->get();

@@ -57,28 +57,14 @@
                                                 <input type="text" name="role_name" value="{{$role->name}}" class="form-control" placeholder="Enter role name..." required>
                                               </div> 
                                             </div>
-                                            <!--<div class="col-md-4">-->
-                                            <!-- <label class="col-sm-4 control-label">{{ __('Password') }}<span class="text-danger">*</span></label>-->
-                                            <!--  <div class="col-sm-12">-->
-                                            <!--    <input type="password" name="password" value="{{$role->plain_password}}" class="form-control" placeholder="Set role password..." required id="myInput">-->
-                                            <!--    <small><input type="checkbox"  onclick="myFunction()">&nbsp;&nbsp;Show Password</small>-->
-                                            <!--  </div> -->
-                                              
-                                            <!--</div>-->
-                                            <!--<div class="col-md-4">-->
-                                            <!-- <label class="col-sm-4 control-label">{{ __('Confirm Password') }}<span class="text-danger">*</span></label>-->
-                                            <!--  <div class="col-sm-12">-->
-                                            <!--    <input type="password" value="{{$role->plain_password}}" name="password_confirmation" id="confpassword" class="form-control" placeholder="Confirm password..." required >-->
-                                            <!--  <small id="error" class="text-danger">Password and Confirm Password should be Same!</small>-->
-                                            <!--  </div> -->
-                                            <!--</div>-->
+                                            <!-- Password fields removed - not needed for role management -->
                                         </div>
                                          <div class="row">
                                         <div class="col-md-12">
                                         <label class="col-sm-4 control-label">{{ __('Permission') }}<span class="text-danger">*</span></label>
                                            <div class="col-sm-8">
                                              @foreach($permissions as $value)
-                                               <input class="perm" name="permission[]" type="checkbox" value="{{$value->id}}" <?php if(in_array($value->id,$array)){ echo "checked";}?> />&nbsp;&nbsp;{{$value->title}}</br>
+                                               <input class="perm" name="permission[]" type="checkbox" value="{{$value->id}}" <?php if(in_array($value->id,$array)){ echo "checked";}?> />&nbsp;&nbsp;{{$value->name}}</br>
                                              @endforeach
                                            </div> 
                                         </div>

@@ -15,8 +15,12 @@
                 
 <h2>Privacy policy</h2>
 
-<?php $privacy_policy = DB::table('daynamicpages')->where('id',9)->get(); ?>
-    <?php   print_r($privacy_policy[0]->content); ?>
+<?php $privacy_policy = DB::table('daynamicpages')->where('id',9)->first(); ?>
+@if($privacy_policy)
+    {!! $privacy_policy->content !!}
+@else
+    <p>Privacy policy content is not available.</p>
+@endif
             </div>
         </section>
         

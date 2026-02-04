@@ -116,7 +116,7 @@
                                     {{ $blog->title }}
                                 </td> 
                                 <td>
-                                    {{ $blog->bcategory->name }}
+                                    {{ $blog->bcategory->name ?? 'N/A' }}
                                 </td> 
                                 <td>
                                         @if($blog->status == 1)

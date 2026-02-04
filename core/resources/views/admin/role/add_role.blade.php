@@ -80,7 +80,7 @@
                                         <label class="col-sm-4 control-label">{{ __('Permission') }}<span class="text-danger">*</span></label>
                                            <div class="col-sm-8">
                                              @foreach($permissions as $value)
-                                               <input class="perm" name="permission[]" type="checkbox" value="{{$value->id}}" id="{{$value->id}}"/>&nbsp;&nbsp;{{$value->title}}</br>
+                                               <input class="perm" name="permission[]" type="checkbox" value="{{$value->id}}" id="{{$value->id}}"/>&nbsp;&nbsp;{{$value->name}}</br>
                                              @endforeach
                                            </div> 
                                         </div>

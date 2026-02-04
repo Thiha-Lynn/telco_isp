@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Setting;
-use App\Language;
-use App\Sectiontitle;
+use App\Models\Setting;
+use App\Models\Language;
+use App\Models\Sectiontitle;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
@@ -179,7 +179,7 @@ class LanguageController extends Controller
     //     return redirect()->route('admin.language.index')->with('notification', $notification);
     // }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $locale, $id) {
 
       $rules = [
           'name' => 'required|max:255',
@@ -245,7 +245,7 @@ class LanguageController extends Controller
     
 
     
-    public function delete($id)
+    public function delete($locale, $id)
     {
         $la = Language::findOrFail($id);
         if ($la->is_default == 1) {

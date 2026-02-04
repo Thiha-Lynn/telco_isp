@@ -74,9 +74,9 @@
                                   
                                     <tr>
                                         <td>{{$index+1}}</td> 
-                                        <td>{{App\User::find($value->user_id)->name??''}}</td> 
+                                        <td>{{App\Models\User::find($value->user_id)->name??''}}</td> 
                                         @php
-                                         $bind_user = App\User::find($value->user_id)->bind_user_id??'';
+                                         $bind_user = App\Models\User::find($value->user_id)->bind_user_id??'';
                                         @endphp
                                         <td><a class="details" data-toggle="modal" data-target="#myuser_model{{$bind_user}}" >{{App\MbtBindUser::find($bind_user)->user_name??''}}</a></td>
                                         <td>{{App\SubCompany::find($value->sub_com_id)->company_name}}</td>
@@ -110,7 +110,7 @@
                                         
                                               <!-- Modal Header -->
                                               <div class="modal-header">
-                                                <h4 class="modal-title">{{__('Query From')}} {{App\User::find($value->user_id)->name??''}}</h4>
+                                                <h4 class="modal-title">{{__('Query From')}} {{App\Models\User::find($value->user_id)->name??''}}</h4>
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                               </div>
                                         
@@ -124,8 +124,8 @@
                                                 <div class="col-md-6">
                                                 <label class="col-sm-4 control-label">{{ __('Username') }}<span class="text-danger">*</span></label>
                                                  <div class="col-sm-12">
-                                                     <input type="text" name="username" readonly value="{{App\User::find($value->user_id)->name??''}}" class="form-control" >
-                                                      <input type="hidden" name="users_fault" value="{{App\User::find($value->user_id)->bind_user_id??''}}"/>
+                                                     <input type="text" name="username" readonly value="{{App\Models\User::find($value->user_id)->name??''}}" class="form-control" >
+                                                      <input type="hidden" name="users_fault" value="{{App\Models\User::find($value->user_id)->bind_user_id??''}}"/>
 
                                                     
                                                   </div> 

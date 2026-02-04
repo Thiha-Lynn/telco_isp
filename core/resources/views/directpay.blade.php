@@ -60,7 +60,7 @@ alert(window.location.href+document.frmmain.url.value);
     <tr>
         
         <?php 
-            $appdata = $_GET['encdata']; 
+            $appdata = $_GET['encdata'] ?? ''; 
             $appd = str_replace(' ', '+', $appdata); 
         ?>
       

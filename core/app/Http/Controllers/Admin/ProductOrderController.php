@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
-use App\Emailsetting;
-use App\ProductOrder;
+use App\Models\User;
+use App\Models\Emailsetting;
+use App\Models\ProductOrder;
 use Illuminate\Http\Request;
 use App\Helpers\Helper;
 use PHPMailer\PHPMailer\Exception;

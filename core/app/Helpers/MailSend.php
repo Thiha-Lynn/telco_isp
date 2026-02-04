@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Helpers;
-use App\Emailsetting;
-use App\EmailTemplate;
+use App\Models\Emailsetting;
+use App\Models\EmailTemplate;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Str;

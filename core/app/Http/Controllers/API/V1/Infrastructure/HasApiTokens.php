@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\PersonalAccessToken;
+use App\Models\PersonalAccessToken;
 use Illuminate\Support\Str;
 
 trait HasApiTokens

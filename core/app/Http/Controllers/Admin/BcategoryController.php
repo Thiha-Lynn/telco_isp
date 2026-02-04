@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Blog;
-use App\Language;
-use App\Bcategory;
+use App\Models\Blog;
+use App\Models\Language;
+use App\Models\Bcategory;
 use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -34,7 +34,9 @@ class BcategoryController extends Controller
     // Add Blog Category
     public function add()
     {
-        return view('admin.blog.blog-category.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.blog.blog-category.add', compact('langs', 'currentLang'));
     }
 
     // Store Blog Category
@@ -76,7 +78,7 @@ class BcategoryController extends Controller
     }
 
     // Blog Category Delete
-    public function delete($id)
+    public function delete($locale, $id)
     {
 
         $bcategory = Bcategory::find($id);
@@ -90,15 +92,16 @@ class BcategoryController extends Controller
     }
 
     // Blog Category Edit
-    public function edit($id)
+    public function edit($locale, $id)
     {
-
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $bcategory = Bcategory::find($id);
-        return view('admin.blog.blog-category.edit', compact('bcategory'));
+        return view('admin.blog.blog-category.edit', compact('bcategory', 'langs', 'currentLang'));
     }
 
     // Blog Skill Category
-    public function update(Request $request, $id)
+    public function update(Request $request, $locale, $id)
     {
      
         $slug = Helper::make_slug($request->name);

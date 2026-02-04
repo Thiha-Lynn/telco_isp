@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Funfact;
-use App\Language;
-use App\Sectiontitle;
+use App\Models\Funfact;
+use App\Models\Language;
+use App\Models\Sectiontitle;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -17,16 +17,26 @@ class FunfactController extends Controller
     }
 
     public function funfact(Request $request){
-        $lang = Language::where('code', $request->language)->first()->id;
+        $langCode = $request->language ?? Language::where('is_default',1)->first()->code;
+        $lang = Language::where('code', $langCode)->first();
+        if (!$lang) {
+            $lang = Language::where('is_default',1)->first();
+        }
+        $langId = $lang->id;
 
-        $funfacts = Funfact::where('language_id', $lang)->orderBy('id', 'DESC')->get();
-        $saectiontitle = Sectiontitle::where('language_id', $lang)->first();
+        $funfacts = Funfact::where('language_id', $langId)->orderBy('id', 'DESC')->get();
+        $saectiontitle = Sectiontitle::where('language_id', $langId)->first();
+        if (!$saectiontitle) {
+            $saectiontitle = Sectiontitle::first() ?? new Sectiontitle(['language_id' => $langId]);
+        }
 
         return view('admin.funfact.index', compact('funfacts', 'saectiontitle'));
     }
 
     public function add(){
-        return view('admin.funfact.add');
+        $langs = \App\Models\Language::all();
+        $currentLang = \App\Models\Language::where('is_default',1)->first();
+        return view('admin.funfact.add', compact('langs', 'currentLang'));
     }
 
     public function store(Request $request){
@@ -62,14 +72,14 @@ class FunfactController extends Controller
         return redirect()->back()->with('notification', $notification);
     }
 
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = \App\Models\Language::all();
+        $currentLang = \App\Models\Language::where('is_default',1)->first();
         $funfact = Funfact::find($id);
-        return view('admin.funfact.edit', compact('funfact'));
-
+        return view('admin.funfact.edit', compact('funfact', 'langs', 'currentLang'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
 
         $funfact = Funfact::findOrFail($id);
@@ -102,7 +112,7 @@ class FunfactController extends Controller
         return redirect(route('admin.funfact').'?language='.$this->lang->code)->with('notification', $notification);
     }
 
-    public function delete($id){
+    public function delete($locale, $id){
 
         $funfact = Funfact::find($id);
         @unlink('assets/front/img/'. $funfact->icon);

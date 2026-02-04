@@ -4,37 +4,37 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Blog;
-use App\Setting;
-use App\Client;
-use App\Portfolio;
-use App\Service;
-use App\About;
-use App\Branch;
-use App\Package;
-use App\Product;
-use App\Scategory;
-use App\Team;
-use App\PaymentQuery;
-use App\Testimonial;
-use App\PaymentGatewey;
-use App\User;
-use App\FaultReportQuery;
-use App\UserQuery;
-use App\MbtBindUser;
-use App\PermissionModel;
-use App\Binduser;
+use App\Models\Blog;
+use App\Models\Setting;
+use App\Models\Client;
+use App\Models\Portfolio;
+use App\Models\Service;
+use App\Models\About;
+use App\Models\Branch;
+use App\Models\Package;
+use App\Models\Product;
+use App\Models\Scategory;
+use App\Models\Team;
+use App\Models\PaymentQuery;
+use App\Models\Testimonial;
+use App\Models\PaymentGatewey;
+use App\Models\User;
+use App\Models\FaultReportQuery;
+use App\Models\UserQuery;
+use App\Models\MbtBindUser;
+use App\Models\PermissionModel;
+use App\Models\Binduser;
 
 use DB;
-use App\SubCompany;
+use App\Models\SubCompany;
 use Illuminate\Support\Facades\Auth;
-use App\Admin;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
-use App\Notification;
-use App\PaymentNew;
-use App\UserDevice;
+use App\Models\Notification;
+use App\Models\PaymentNew;
+use App\Models\UserDevice;
 
 class DashboardController extends Controller
 {
@@ -128,33 +128,31 @@ class DashboardController extends Controller
     public function payment_query(Request $request)
     {
         $settings = Setting::where('id', '1')->first();
-        $data['base_url'] = $settings->ip_address;
+        $data['base_url'] = $settings->ip_address ?? '';
         $data["access_token"] = ""; // Initialize access_token
         
-        $url = $data['base_url']."api/v1/auth/get-access-token"; 
-        $headerArray =array("Content-type:application/json","Accept:application/json");
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 0); 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_HTTPHEADER,$headerArray);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15*60);
-        $output = curl_exec($ch);
-        if ($output === false)
-        {
-            echo 'Curl error: ' . curl_error($ch);
+        if (!empty($data['base_url'])) {
+            $url = $data['base_url']."api/v1/auth/get-access-token"; 
+            $headerArray = array("Content-type:application/json","Accept:application/json");
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 0); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArray);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            
+            if ($output !== false) {
+                $decode_token = json_decode($output, true);
+                if (isset($decode_token['data']['access_token'])) {
+                    $data['access_token'] = $decode_token['data']['access_token'];
+                }
+            }
         }
-        else
-        {
-            echo PHP_EOL;  
-            echo "\n";
-            $decode_token = json_decode($output,true);
-            $data['access_token'] = $decode_token['data']['access_token'];
-        };
-        curl_close($ch);
         
         $date_from_new = date('Y-m-d', strtotime('-365 days', time()));
         $date_to_new   = date('Y-m-d', strtotime(date('Y-m-d')));  
@@ -317,33 +315,31 @@ class DashboardController extends Controller
         // dd($request->all());
         
         $settings = Setting::where('id', '1')->first();
-        $data['base_url'] = $settings->ip_address;
+        $data['base_url'] = $settings->ip_address ?? '';
         $data["access_token"] = ""; // Initialize access_token
         
-        $url = $data['base_url']."api/v1/auth/get-access-token"; 
-        $headerArray =array("Content-type:application/json","Accept:application/json");
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 0); 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_HTTPHEADER,$headerArray);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15*60);
-        $output = curl_exec($ch);
-        if ($output === false)
-        {
-            echo 'Curl error: ' . curl_error($ch);
+        if (!empty($data['base_url'])) {
+            $url = $data['base_url']."api/v1/auth/get-access-token"; 
+            $headerArray = array("Content-type:application/json","Accept:application/json");
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 0); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArray);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            
+            if ($output !== false) {
+                $decode_token = json_decode($output, true);
+                if (isset($decode_token['data']['access_token'])) {
+                    $data['access_token'] = $decode_token['data']['access_token'];
+                }
+            }
         }
-        else
-        {
-            echo PHP_EOL;  
-            echo "\n";
-            $decode_token = json_decode($output,true);
-            $data['access_token'] = $decode_token['data']['access_token'];
-        };
-        curl_close($ch);
        
       $user_account = $request->input('user_account');
       $sub_com_id= $request->input('sub_com_id');
@@ -1299,7 +1295,7 @@ public function search_install_query(Request $request)
     
     public function role_add()
     {
-        $permissions = DB::table('permissions')->where('deleted_at',1)->get();
+        $permissions = DB::table('permissions')->whereNull('deleted_at')->get();
         return view('admin.role.add_role',compact('permissions'));
     }
     public function update_role($ln,$role_id)
@@ -1337,8 +1333,6 @@ public function search_install_query(Request $request)
             //permission_role
             $create = DB::table('role')->insertGetId([
                 'name'           => $request->role_name,
-                'role_password'  => Hash::make($request->password),
-                'plain_password' => $request->password,
                 'created_by'     => Auth::user()->id,
                 ]);
                 

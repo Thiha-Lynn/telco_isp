@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponse;
-use App\PaymentNew;
-use App\PaymentGatewey;
-use App\MbtBindUser;
+use App\Models\PaymentNew;
+use App\Models\PaymentGatewey;
+use App\Models\MbtBindUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

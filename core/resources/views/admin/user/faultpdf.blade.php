@@ -29,9 +29,9 @@
             @foreach($fault as $index =>$value)
                 <tr>
                             <td>{{$index+1}}</td>
-                            <td>{{App\User::find($value->user_id)->name??''}}</td>                                          
+                            <td>{{App\Models\User::find($value->user_id)->name??''}}</td>                                          
                             @php
-                                $bind_user = App\User::find($value->user_id)->bind_user_id??'';
+                                $bind_user = App\Models\User::find($value->user_id)->bind_user_id??'';
                             @endphp
                             <td>{{App\MbtBindUser::find($bind_user)->user_name??''}}</a></td>    
                             <td>{{App\SubCompany::find($value->sub_com_id)->company_name}}</td>

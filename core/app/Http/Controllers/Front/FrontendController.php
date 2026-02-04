@@ -1,40 +1,40 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-use App\Faq;
+use App\Models\Faq;
 use Session;
-use App\Blog;
-use App\Team;
-use App\About;
-use App\Branch;
-use App\Slider;
-use App\Social;
-use App\Package;
-use App\Service;
-use App\Billpaid;
-use App\Language;
-use App\Bcategory;
-use App\Daynamicpage;
-use App\Mediazone;
-use App\Emailsetting;
-use App\Offerprovide;
-use App\Packageorder;
-use App\Sectiontitle;
-use App\Entertainment;
-use App\Funfact;
-use App\PaymentGatewey;
+use App\Models\Blog;
+use App\Models\Team;
+use App\Models\About;
+use App\Models\Branch;
+use App\Models\Slider;
+use App\Models\Social;
+use App\Models\Package;
+use App\Models\Service;
+use App\Models\Billpaid;
+use App\Models\Language;
+use App\Models\Bcategory;
+use App\Models\Daynamicpage;
+use App\Models\Mediazone;
+use App\Models\Emailsetting;
+use App\Models\Offerprovide;
+use App\Models\Packageorder;
+use App\Models\Sectiontitle;
+use App\Models\Entertainment;
+use App\Models\Funfact;
+use App\Models\PaymentGatewey;
 use App\Helpers\MailSend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Product;
-use App\Testimonial;
+use App\Models\Product;
+use App\Models\Testimonial;
 use Illuminate\Support\Facades\Auth;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use App\PaymentNew;
-use App\Setting;
-use App\User;
-use App\PendingPayment;
+use App\Models\PaymentNew;
+use App\Models\Setting;
+use App\Models\User;
+use App\Models\PendingPayment;
 
 class FrontendController extends Controller
 {
@@ -315,9 +315,15 @@ class FrontendController extends Controller
         }
 
         $user = Auth::user();
-        $data['packagedetails'] = Package::where('id', $user->activepackage)->first();
+        
+        // Check if user is authenticated
+        if (!$user) {
+            return redirect()->route('user.login')->with('error', 'Please login to access bill pay.');
+        }
+        
+        $data['packagedetails'] = $user->activepackage ? Package::where('id', $user->activepackage)->first() : null;
         $data['gateways'] = PaymentGatewey::where('status',1)->get();
-        $data['billpayed'] = Billpaid::where('user_id', Auth::user()->id)->where('yearmonth', \Carbon\Carbon::now()->format('m-Y'))->first();
+        $data['billpayed'] = Billpaid::where('user_id', $user->id)->where('yearmonth', \Carbon\Carbon::now()->format('m-Y'))->first();
 
         return view('front.billpay', $data);
         

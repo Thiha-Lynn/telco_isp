@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Language;
-use App\PaymentProcess;
+use App\Models\Language;
+use App\Models\PaymentProcess;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
-use App\ExtraMonth;
+use App\Models\ExtraMonth;
 
 class PaymentController extends Controller
 {
@@ -67,7 +67,7 @@ class PaymentController extends Controller
         return view('admin.payments.edit', compact('payment'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
         $request->validate([

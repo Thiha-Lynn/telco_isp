@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Language;
-use App\Entertainment;
-use App\Sectiontitle;
+use App\Models\Language;
+use App\Models\Entertainment;
+use App\Models\Sectiontitle;
 use Session;
 
 class EntertainmentController extends Controller
@@ -33,7 +33,9 @@ class EntertainmentController extends Controller
 
     // Add Entertainment
     public function add(){
-        return view('admin.entertainment.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.entertainment.add', compact('langs', 'currentLang'));
     }
 
     // Store Entertainment
@@ -69,7 +71,7 @@ class EntertainmentController extends Controller
     }
 
     // Entertainment Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $entertainment = Entertainment::find($id);
         @unlink('assets/front/img/'. $entertainment->icon);
@@ -79,15 +81,15 @@ class EntertainmentController extends Controller
     }
 
     // Entertainment Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $entertainment = Entertainment::find($id);
-        return view('admin.entertainment.edit', compact('entertainment'));
-
+        return view('admin.entertainment.edit', compact('entertainment', 'langs', 'currentLang'));
     }
 
     // Update Entertainment
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
          $request->validate([

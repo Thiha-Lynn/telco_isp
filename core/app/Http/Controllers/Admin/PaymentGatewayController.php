@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\PaymentGatewey;
+use App\Models\PaymentGatewey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -17,7 +17,7 @@ class PaymentGatewayController extends Controller
     }
 
 
-    public function edit($id)
+    public function edit($locale, $id)
     {
         $data = PaymentGatewey::findOrFail($id);
         return view('admin.payment_gateway.edit',compact('data'));

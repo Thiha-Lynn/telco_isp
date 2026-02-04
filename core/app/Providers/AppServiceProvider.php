@@ -4,12 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use App\Setting;
-use App\Admin;
-use App\Daynamicpage;
-use App\Social;
-use App\Language;
-use App\SectionTitle;
+use App\Models\Setting;
+use App\Models\Admin;
+use App\Models\Daynamicpage;
+use App\Models\Social;
+use App\Models\Language;
+use App\Models\Sectiontitle;
 
 class AppServiceProvider extends ServiceProvider
 {

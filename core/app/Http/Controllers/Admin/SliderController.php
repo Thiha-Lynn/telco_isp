@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Language;
+use App\Models\Language;
 use Illuminate\Http\Request;
-use App\Slider;
+use App\Models\Slider;
 use Session;
 
 class SliderController extends Controller
@@ -31,7 +31,9 @@ class SliderController extends Controller
 
     // Add slider Category
     public function add(){
-        return view('admin.slider.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.slider.add', compact('langs', 'currentLang'));
     }
 
     // Store slider Category
@@ -70,7 +72,7 @@ class SliderController extends Controller
     }
 
     // slider Category Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $slider = Slider::find($id);
         @unlink('assets/front/img/'. $slider->image);
@@ -80,15 +82,15 @@ class SliderController extends Controller
     }
 
     // slider Category Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $slider = Slider::find($id);
-        return view('admin.slider.edit', compact('slider'));
-
+        return view('admin.slider.edit', compact('slider', 'langs', 'currentLang'));
     }
 
     // Update slider Category
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
         $request->validate([

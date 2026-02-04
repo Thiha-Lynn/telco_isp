@@ -2,37 +2,43 @@
 
 namespace App\Http\Controllers\Payment\Paybill;
 
-use App\Billpaid;
-use App\Classes\GeniusMailer;
+use App\Models\Billpaid;
 use App\Helpers\Helper;
-use App\Models\UserSubscription;
 use Carbon\Carbon;
-use Cartalyst\Stripe\Laravel\Facades\Stripe;
+use Stripe\Stripe;
+use Stripe\Token;
+use Stripe\Charge;
+use Stripe\Exception\CardException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Str;
-use Barryvdh\DomPDF\Facade as PDF;
-use App\Emailsetting;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use App\Models\Emailsetting;
 use App\Http\Controllers\Controller;
-use App\Package;
-use App\PaymentGatewey;
+use App\Models\Package;
+use App\Models\PaymentGatewey;
 use App\Models\Setting;
-use App\Packageorder;
-use App\User;
+use App\Models\Packageorder;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class StripeController extends Controller
 {
+    protected string $stripeSecret;
 
     public function __construct()
     {
         $data = PaymentGatewey::whereKeyword('stripe')->first();
-        $paydata = $data->convertAutoData();
-        Config::set('services.stripe.key',  $paydata['key']);
-        Config::set('services.stripe.secret', $paydata['secret']);
+        if ($data) {
+            $paydata = $data->convertAutoData();
+            $this->stripeSecret = $paydata['secret'] ?? '';
+            Config::set('services.stripe.key', $paydata['key'] ?? '');
+            Config::set('services.stripe.secret', $this->stripeSecret);
+            Stripe::setApiKey($this->stripeSecret);
+        }
     }
 
 
@@ -47,14 +53,10 @@ class StripeController extends Controller
                 'year' => 'required',
             ]);
 
-            
-            $stripe = Stripe::make(Config::get('services.stripe.secret'));
-            
-
             try{
               
-                $token = $stripe->tokens()->create([
-                    'card' =>[
+                $token = Token::create([
+                    'card' => [
                         'name' => $request->fullname,
                         'number' => $request->card_number,
                         'exp_month' => $request->month,
@@ -63,7 +65,7 @@ class StripeController extends Controller
                     ],
                 ]);
 
-                if (!isset($token['id'])) {
+                if (!isset($token->id)) {
                     $notification = array(
                         'messege' => 'Token Problem With Your Token.',
                         'alert' => 'error'
@@ -71,15 +73,15 @@ class StripeController extends Controller
                     return redirect()->back()->with('notification', $notification);
                 }
         
-                $charge = $stripe->charges()->create([
-                    'card' => $token['id'],
-                    'currency' => Helper::showCurrencyCode(),
-                    'amount' =>  $request->packageprice,
+                $charge = Charge::create([
+                    'source' => $token->id,
+                    'currency' => strtolower(Helper::showCurrencyCode()),
+                    'amount' => (int)($request->packageprice * 100), // Stripe expects cents
                     'description' => \Carbon\Carbon::now()->format('M Y').", This month bill paid. Package name: ".$request->packagename,
                 ]);
 
                
-                if ($charge['status'] == 'succeeded') {
+                if ($charge->status == 'succeeded') {
 
                     
                     $order  = new Billpaid();
@@ -89,7 +91,7 @@ class StripeController extends Controller
                     $order['currency_sign'] = "$";
                     $order['attendance_id'] = Str::random(4).time();
                     $order['payment_status'] = "Completed";
-                    $order['txn_id'] = $charge['balance_transaction'];
+                    $order['txn_id'] = $charge->balance_transaction;
                     $order['user_id'] = Auth::user()->id;
                     $order['package_id'] = $request->packageid;
                     $order['yearmonth'] = \Carbon\Carbon::now()->format('m-Y');
@@ -169,19 +171,19 @@ class StripeController extends Controller
                     return view('front.success.package');
                 }
 
+            }catch (CardException $e){
+                $notification = array(
+                    'messege' => $e->getMessage(),
+                    'alert' => 'warning'
+                );
+                return redirect()->back()->with('notification', $notification);
+            }catch (\Stripe\Exception\ApiErrorException $e){
+                $notification = array(
+                    'messege' => $e->getMessage(),
+                    'alert' => 'warning'
+                );
+                return redirect()->back()->with('notification', $notification);
             }catch (Exception $e){
-                $notification = array(
-                    'messege' => $e->getMessage(),
-                    'alert' => 'warning'
-                );
-                return redirect()->back()->with('notification', $notification);
-            }catch (\Cartalyst\Stripe\Exception\CardErrorException $e){
-                $notification = array(
-                    'messege' => $e->getMessage(),
-                    'alert' => 'warning'
-                );
-                return redirect()->back()->with('notification', $notification);
-            }catch (\Cartalyst\Stripe\Exception\MissingParameterException $e){
                 $notification = array(
                     'messege' => $e->getMessage(),
                     'alert' => 'warning'

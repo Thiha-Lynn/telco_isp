@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Language;
-use App\Mediazone;
-use App\Sectiontitle;
+use App\Models\Language;
+use App\Models\Mediazone;
+use App\Models\Sectiontitle;
 use Session;
 
 class MediaController extends Controller
@@ -18,16 +18,26 @@ class MediaController extends Controller
     }
 
     public function media(Request $request){
-        $lang = Language::where('code', $request->language)->first()->id;
+        $langCode = $request->language ?? $this->lang->code;
+        $lang = Language::where('code', $langCode)->first();
+        if (!$lang) {
+            $lang = $this->lang;
+        }
+        $langId = $lang->id;
 
-        $medias = Mediazone::where('language_id', $lang)->orderBy('id', 'DESC')->get();
-        $saectiontitle = Sectiontitle::where('language_id', $lang)->first();
+        $medias = Mediazone::where('language_id', $langId)->orderBy('id', 'DESC')->get();
+        $saectiontitle = Sectiontitle::where('language_id', $langId)->first();
+        if (!$saectiontitle) {
+            $saectiontitle = Sectiontitle::first() ?? new Sectiontitle(['language_id' => $langId]);
+        }
         return view('admin.media.index', compact('medias', 'saectiontitle'));
     }
 
     // Add Mediazone
     public function add(){
-        return view('admin.media.add');
+        $langs = Language::all();
+        $currentLang = Language::where('is_default',1)->first();
+        return view('admin.media.add', compact('langs', 'currentLang'));
     }
 
     // Store Mediazone
@@ -63,7 +73,7 @@ class MediaController extends Controller
     }
 
     // Mediazone Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $media = Mediazone::find($id);
         @unlink('assets/front/img/'. $media->icon);
@@ -73,15 +83,15 @@ class MediaController extends Controller
     }
 
     // Mediazone Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = Language::where('is_default',1)->first();
         $media = Mediazone::find($id);
-        return view('admin.media.edit', compact('media'));
-
+        return view('admin.media.edit', compact('media', 'langs', 'currentLang'));
     }
 
     // Update Mediazone
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
          $request->validate([

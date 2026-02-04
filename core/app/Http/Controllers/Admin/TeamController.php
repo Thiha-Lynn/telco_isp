@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Team;
-use App\Language;
+use App\Models\Team;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -31,7 +31,9 @@ class TeamController extends Controller
 
     //Add team
     public function add(){
-        return view('admin.team.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.team.add', compact('langs', 'currentLang'));
     }
 
     // Store team
@@ -96,7 +98,7 @@ class TeamController extends Controller
     }
 
     //team Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $team = Team::find($id);
         @unlink('assets/front/img/'. $team->image);
@@ -106,15 +108,15 @@ class TeamController extends Controller
     }
 
     //team Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $team = Team::find($id);
-        return view('admin.team.edit', compact('team'));
-
+        return view('admin.team.edit', compact('team', 'langs', 'currentLang'));
     }
 
     // team Update
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $request->validate([
             'image' => 'mimes:jpeg,jpg,png',

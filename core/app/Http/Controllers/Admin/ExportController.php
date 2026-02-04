@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Currency;
-use App\User;
+use App\Models\Currency;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use PDF;
-use App\MbtBindUser;
-use App\SubCompany;
+use App\Models\MbtBindUser;
+use App\Models\SubCompany;
 use DB;
-use App\PaymentGatewey;
-use App\PaymentNew;
-use App\UserQuery;
+use App\Models\PaymentGatewey;
+use App\Models\PaymentNew;
+use App\Models\UserQuery;
 use URL;
-use App\FaultReportQuery;
-use App\Binduser;
-use App\Setting;
+use App\Models\FaultReportQuery;
+use App\Models\Binduser;
+use App\Models\Setting;
 
 class ExportController extends Controller
 {

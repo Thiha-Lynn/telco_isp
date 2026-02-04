@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
-use App\User;
-use App\Package;
-use App\Billpaid;
-use App\Packageorder;
+use App\Models\User;
+use App\Models\Package;
+use App\Models\Billpaid;
+use App\Models\Packageorder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\ProductOrder;
-use App\Setting;
+use App\Models\ProductOrder;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;

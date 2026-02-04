@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Product;
-use App\Language;
+use App\Models\Product;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

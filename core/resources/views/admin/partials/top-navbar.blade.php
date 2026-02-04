@@ -41,7 +41,7 @@
             { ?>
                     <li class="nav-item"  value="{{$value->sender_userid}}" onClick="getuserid(this.value);"> 
                       <a href="" class="nav-link">
-                          {{App\User::find($value->sender_userid)->name??''}}- <b class="badge badge-info">{{DB::table('chat')->where('read_status', '=', 0)->where('sender_userid',$value->sender_userid)->count()??''}}</b>
+                          {{App\Models\User::find($value->sender_userid)->name??''}}- <b class="badge badge-info">{{DB::table('chat')->where('read_status', '=', 0)->where('sender_userid',$value->sender_userid)->count()??''}}</b>
                       </a>
                     </li>
                        <?php } ?>
@@ -66,17 +66,25 @@
                         }
 
         </script>
+     @php
+        // Get all current route parameters and merge with the new locale
+        $currentRouteParams = request()->route() ? request()->route()->parameters() : [];
+     @endphp
      @foreach (config('app.available_locales') as $locale)
+     @php
+        // Merge the current route parameters with the new locale
+        $switchParams = array_merge(['locale' => $locale], $currentRouteParams);
+     @endphp
      @if($locale == 'en')
      <img class="user-image w-40 img-circle " src="{{ asset('assets/admin/img/eng.jpg') }}"  alt="User Image" style="max-width: 18px;max-height: 18px;margin-top: 10px;">
       <li class="nav-item">
-           <a class="nav-link" href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), [$locale,$id='']) }}" @if (app()->getLocale() == $locale) style="font-weight: bold; text-decoration: underline" @endif>
+           <a class="nav-link" href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), $switchParams) }}" @if (app()->getLocale() == $locale) style="font-weight: bold; text-decoration: underline" @endif>
            {{ strtoupper($locale) }} </a>
         </li>
      @else
      <img class="user-image w-40 img-circle " src="{{ asset('assets/admin/img/china.jpg') }}"  alt="User Image" style="max-width: 18px;max-height: 18px;margin-top: 10px;">
         <li class="nav-item">
-           <a class="nav-link" href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), [$locale,$id='']) }}" @if (app()->getLocale() == $locale) style="font-weight: bold; text-decoration: underline" @endif>
+           <a class="nav-link" href="{{ route(\Illuminate\Support\Facades\Route::currentRouteName(), $switchParams) }}" @if (app()->getLocale() == $locale) style="font-weight: bold; text-decoration: underline" @endif>
            {{ strtoupper($locale) }} </a>
         </li>
      @endif

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Blog;
-use App\Language;
-use App\Bcategory;
-use App\Sectiontitle;
+use App\Models\Blog;
+use App\Models\Language;
+use App\Models\Bcategory;
+use App\Models\Sectiontitle;
 use App\Helpers\Helper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -32,13 +32,18 @@ class BlogController extends Controller
         $blogs = Blog::where('language_id', $langId)->orderBy('id', 'DESC')->get();
 
         $saectiontitle = Sectiontitle::where('language_id', $langId)->first();
+        if (!$saectiontitle) {
+            $saectiontitle = Sectiontitle::first() ?? new Sectiontitle(['language_id' => $langId]);
+        }
       
         return view('admin.blog.index', compact('blogs', 'saectiontitle'));
     }
 
     // Add Blog 
     public function add(){
-        return view('admin.blog.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.blog.add', compact('langs', 'currentLang'));
     }
 
     public function blog_get_category($id){
@@ -112,7 +117,7 @@ class BlogController extends Controller
     }
 
     // Blog  Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $blog = Blog::find($id);
         @unlink('assets/front/img/'. $blog->main_image);
@@ -121,19 +126,19 @@ class BlogController extends Controller
     }
 
     // Blog  Edit
-    public function edit($id){
-       
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $blog = Blog::findOrFail($id);
         $blog_lan = $blog->language_id;
        
         $bcategories = Bcategory::where('status', 1)->where('language_id', $blog_lan)->get();
         
-        return view('admin.blog.edit', compact('bcategories', 'blog'));
-
+        return view('admin.blog.edit', compact('bcategories', 'blog', 'langs', 'currentLang'));
     }
 
     // Blog Update
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $slug = Helper::make_slug($request->title);
         $blogs = Blog::select('slug')->get();

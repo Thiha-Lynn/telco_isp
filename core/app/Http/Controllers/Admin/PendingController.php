@@ -6,14 +6,14 @@ use Session;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
-use App\Language;
-use App\PendingPayment;
-use App\Setting;
-use App\BankSetting;
-use App\PaymentNew;
-use App\PaymentQuery;
-use App\MbtBindUser;
-use App\WaveCallback;
+use App\Models\Language;
+use App\Models\PendingPayment;
+use App\Models\Setting;
+use App\Models\BankSetting;
+use App\Models\PaymentNew;
+use App\Models\PaymentQuery;
+use App\Models\MbtBindUser;
+use App\Models\WaveCallback;
 
 class PendingController extends Controller
 {

@@ -85,27 +85,30 @@ Route::group(['middleware' => 'setlang'], function () {
 
 
     // package payment gateway route
-    Route::post('/package/paypal/submit', 'Payment\Package\PaypalController@store')->name('package.paypal.submit');
-    Route::get('/package/paypal/cancle', 'Payment\Package\PaypalController@paycancle')->name('package.payment.cancle');
-    Route::get('/package/paypal/return', 'Payment\Package\PaypalController@payreturn')->name('package.payment.return');
-    Route::get('/package/paypal/notify', 'Payment\Package\PaypalController@notify')->name('package.payment.notify');
+    // PayPal routes temporarily disabled - needs migration to new SDK
+    // Route::post('/package/paypal/submit', 'Payment\Package\PaypalController@store')->name('package.paypal.submit');
+    // Route::get('/package/paypal/cancle', 'Payment\Package\PaypalController@paycancle')->name('package.payment.cancle');
+    // Route::get('/package/paypal/return', 'Payment\Package\PaypalController@payreturn')->name('package.payment.return');
+    // Route::get('/package/paypal/notify', 'Payment\Package\PaypalController@notify')->name('package.payment.notify');
     Route::post('/package/stripe/submit', 'Payment\Package\StripeController@store')->name('package.stripe.submit');
   
 
 
     // Pay bil payment gateway route
-    Route::post('/paybill/paypal/submit', 'Payment\Paybill\PaypalController@store')->name('paybill.paypal.submit');
-    Route::get('/paybill/paypal/cancle', 'Payment\Paybill\PaypalController@paycancle')->name('paybill.payment.cancle');
-    Route::get('/paybill/paypal/return', 'Payment\Paybill\PaypalController@payreturn')->name('paybill.payment.return');
-    Route::get('/paybill/paypal/notify', 'Payment\Paybill\PaypalController@notify')->name('paybill.payment.notify');
+    // PayPal routes temporarily disabled - needs migration to new SDK
+    // Route::post('/paybill/paypal/submit', 'Payment\Paybill\PaypalController@store')->name('paybill.paypal.submit');
+    // Route::get('/paybill/paypal/cancle', 'Payment\Paybill\PaypalController@paycancle')->name('paybill.payment.cancle');
+    // Route::get('/paybill/paypal/return', 'Payment\Paybill\PaypalController@payreturn')->name('paybill.payment.return');
+    // Route::get('/paybill/paypal/notify', 'Payment\Paybill\PaypalController@notify')->name('paybill.payment.notify');
     Route::post('/paybill/stripe/submit', 'Payment\Paybill\StripeController@store')->name('paybill.stripe.submit');
 
 
     // product payment gateway route
-    Route::post('/product/paypal/submit', 'Payment\Product\PaypalController@store')->name('product.paypal.submit');
-    Route::get('/product/order/paypal/cancle', 'Payment\Product\PaypalController@paycancle')->name('product.payment.cancle');
-    Route::get('/product/paypal/return', 'Payment\Product\PaypalController@payreturn')->name('product.payment.return');
-    Route::get('/product/paypal/notify', 'Payment\Product\PaypalController@notify')->name('product.payment.notify');
+    // PayPal routes temporarily disabled - needs migration to new SDK
+    // Route::post('/product/paypal/submit', 'Payment\Product\PaypalController@store')->name('product.paypal.submit');
+    // Route::get('/product/order/paypal/cancle', 'Payment\Product\PaypalController@paycancle')->name('product.payment.cancle');
+    // Route::get('/product/paypal/return', 'Payment\Product\PaypalController@payreturn')->name('product.payment.return');
+    // Route::get('/product/paypal/notify', 'Payment\Product\PaypalController@notify')->name('product.payment.notify');
     Route::post('/product/stripe/submit', 'Payment\Product\StripeController@store')->name('product.stripe.submit');
    
 
@@ -348,6 +351,7 @@ Route::group(['prefix' => '{locale}/admin', 'where' => ['locale' => '[a-zA-Z]{2}
 
     // Socila Links Route
     Route::get('/slinks', 'Admin\SocialController@slinks')->name('admin.slinks');
+    Route::get('/slinks/add', 'Admin\SocialController@addSlinks')->name('admin.slinks.add');
     Route::post('/slinks/store', 'Admin\SocialController@storeSlinks')->name('admin.storeSlinks');
     Route::post('/slinks/update/{id}/', 'Admin\SocialController@updateSlinks')->name('admin.updateSlinks');
     Route::get('/slinks/edit/{id}/', 'Admin\SocialController@editSlinks')->name('admin.editSlinks');

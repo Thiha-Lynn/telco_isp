@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Language;
-use App\Daynamicpage;
+use App\Models\Language;
+use App\Models\Daynamicpage;
 use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
@@ -32,7 +32,9 @@ class DynamicpageController extends Controller
     }
 
     public function add(){
-        return view('admin.dynamicpage.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.dynamicpage.add', compact('langs', 'currentLang'));
     }
 
     public function store(Request $request){
@@ -123,7 +125,7 @@ class DynamicpageController extends Controller
         return redirect()->back()->with('notification', $notification);
     }
 
-    public function delete($id){
+    public function delete($locale, $id){
 
         $dynamicpage = Daynamicpage::find($id);
         $dynamicpage->delete();

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Branch;
-use App\Language;
+use App\Models\Branch;
+use App\Models\Language;
 use Mews\Purifier\Facades\Purifier;
 use Session;
 
@@ -31,7 +31,9 @@ class BranchController extends Controller
 
     // Add Branch
     public function add(){
-        return view('admin.branch.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.branch.add', compact('langs', 'currentLang'));
     }
 
     // Store Branch
@@ -63,7 +65,7 @@ class BranchController extends Controller
     }
 
     // Branch Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $branch = Branch::find($id);
         $branch->delete();
@@ -72,15 +74,15 @@ class BranchController extends Controller
     }
 
     // Branch Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $branch = Branch::find($id);
-        return view('admin.branch.edit', compact('branch'));
-
+        return view('admin.branch.edit', compact('branch', 'langs', 'currentLang'));
     }
 
     // Update Branch
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
          $request->validate([

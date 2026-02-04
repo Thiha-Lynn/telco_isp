@@ -114,7 +114,7 @@
                                     <tr>
                                         <td>1</td>
                                         <td>Shubham Kumar</td>    
-                                        <td><a href="{{route('admin.userdetails')}}" >Delete</a>&nbsp;&nbsp;<a href="{{route('admin.userdetails')}}" >Edit</a></td>
+                                        <td><a href="#">Delete</a>&nbsp;&nbsp;<a href="#">Edit</a></td>
                                     </tr>
                               </tbody>
                             </table>

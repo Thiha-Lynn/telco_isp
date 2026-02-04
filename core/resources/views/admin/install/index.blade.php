@@ -128,8 +128,8 @@
                                     @foreach($user_query as $index =>$value)
                                     <tr>
                                         <td>{{$index+1}}</td>
-                                        <td>{{App\User::find($value->user_id)->name??''}}</td>    
-                                        <!--<td><a class="details" data-toggle="modal" data-target="#myuser_model{{$value->user_id}}" >{{App\User::find($value->user_id)->uniq_id??''}}</a></td>-->
+                                        <td>{{App\Models\User::find($value->user_id)->name??''}}</td>    
+                                        <!--<td><a class="details" data-toggle="modal" data-target="#myuser_model{{$value->user_id}}" >{{App\Models\User::find($value->user_id)->uniq_id??''}}</a></td>-->
                                         <!--<td>{{App\SubCompany::find($value->sub_company)->company_name??''}}</td>-->
                                         <td>{{$value->apply_date_start}}</td>
                                         <td>{{$value->user_number}}</td>
@@ -161,7 +161,7 @@
                                         
                                               <!-- Modal Header -->
                                               <div class="modal-header">
-                                                <h4 class="modal-title">{{__('Query From')}}{{App\User::find($value->user_id)->name??''}}</h4>
+                                                <h4 class="modal-title">{{__('Query From')}}{{App\Models\User::find($value->user_id)->name??''}}</h4>
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                               </div>
                                         
@@ -171,14 +171,14 @@
                                                 @csrf
                                                 <input type="hidden" name="query_id" value="{{$value->apply_id}}">
                                                 <input type="hidden" name="install_user_id" value="{{$value->user_id}}">
-                                                  <input type="hidden" name="user_id" value="{{App\User::find($value->id)->name??''}}">
+                                                  <input type="hidden" name="user_id" value="{{App\Models\User::find($value->id)->name??''}}">
                                                <div class="row">
                                                 <div class="col-md-6">
                                                 <label class="col-sm-4 control-label">{{ __('Username') }}<span class="text-danger">*</span></label>
                                                  <div class="col-sm-12">
-                                                     <input type="text" name="username" readonly value="{{App\User::find($value->user_id)->name??''}}" class="form-control" >
+                                                     <input type="text" name="username" readonly value="{{App\Models\User::find($value->user_id)->name??''}}" class="form-control" >
                                                      
-                                                     <input type="hidden" name="users_hidden" value="{{App\User::find($value->user_id)->bind_user_id??''}}"/>
+                                                     <input type="hidden" name="users_hidden" value="{{App\Models\User::find($value->user_id)->bind_user_id??''}}"/>
                                                   </div> 
                                                 </div>
                                                 <div class="col-md-6">

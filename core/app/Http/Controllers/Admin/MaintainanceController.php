@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\MaintenanceSetting;
+use App\Models\MaintenanceSetting;
 
 class MaintainanceController extends Controller
 {

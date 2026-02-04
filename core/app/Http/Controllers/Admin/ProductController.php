@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Product;
-use App\Language;
+use App\Models\Product;
+use App\Models\Language;
 use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
@@ -21,16 +21,23 @@ class ProductController extends Controller
     }
 
     public function products(Request $request){
-        $lang = Language::where('code', $request->language)->first()->id;
+        $langCode = $request->language ?? $this->lang->code;
+        $lang = Language::where('code', $langCode)->first();
+        if (!$lang) {
+            $lang = $this->lang;
+        }
+        $langId = $lang->id;
         
-        $data['products'] = Product::where('language_id', $lang)->orderBy('id', 'DESC')->get();
+        $data['products'] = Product::where('language_id', $langId)->orderBy('id', 'DESC')->get();
 
         return view('admin.product.index',$data);
     }
 
 
     public function add(){
-        return view('admin.product.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.product.add', compact('langs', 'currentLang'));
     }
 
     public function store(Request $request){
@@ -96,7 +103,7 @@ class ProductController extends Controller
 
     }
 
-    public function delete($id){
+    public function delete($locale, $id){
 
         $product = Product::findOrFail($id);
 
@@ -107,14 +114,14 @@ class ProductController extends Controller
 
     }
 
-    public function edit($id){
-        
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $product = Product::findOrFail($id);
-        return view('admin.product.edit', compact('product'));
-
+        return view('admin.product.edit', compact('product', 'langs', 'currentLang'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $slug = Helper::make_slug($request->title);
         $products = Product::select('slug')->get();

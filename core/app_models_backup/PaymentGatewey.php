@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Currency;
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 

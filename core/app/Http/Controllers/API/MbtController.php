@@ -3,42 +3,42 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller; 
 use Validator;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 use Mail;
-use App\Service;
-use App\About;
-use App\Branch;
-use App\Package;
-use App\Product;
-use App\Scategory;
-use App\Team;
-use App\MbtBindUser;
-use App\PaymentQuery;
-use App\Testimonial;
-use App\PaymentGatewey;
-use App\FaultReportQuery;
-use App\UserQuery;
-use App\PermissionModel;
-use App\SubCompany;
-use App\Notification;
-use App\ErrorCode;
+use App\Models\Service;
+use App\Models\About;
+use App\Models\Branch;
+use App\Models\Package;
+use App\Models\Product;
+use App\Models\Scategory;
+use App\Models\Team;
+use App\Models\MbtBindUser;
+use App\Models\PaymentQuery;
+use App\Models\Testimonial;
+use App\Models\PaymentGatewey;
+use App\Models\FaultReportQuery;
+use App\Models\UserQuery;
+use App\Models\PermissionModel;
+use App\Models\SubCompany;
+use App\Models\Notification;
+use App\Models\ErrorCode;
 use DB;
-use App\PaymentNew;
-use App\UserDevice;
-use App\CborderDetail;
-use App\PendingPayment;
-use App\AyaCallback;
-use App\BankSetting;
-use App\Setting;
-use App\ExtraMonth;
-use App\Promotion;
+use App\Models\PaymentNew;
+use App\Models\UserDevice;
+use App\Models\CborderDetail;
+use App\Models\PendingPayment;
+use App\Models\AyaCallback;
+use App\Models\BankSetting;
+use App\Models\Setting;
+use App\Models\ExtraMonth;
+use App\Models\Promotion;
 use Illuminate\Support\Facades\Cache;
 use DateTime;
-use App\WaveCallback;
-use App\MaintenanceSetting;
-use App\PaymentProcess;
+use App\Models\WaveCallback;
+use App\Models\MaintenanceSetting;
+use App\Models\PaymentProcess;
 
 class MbtController extends Controller
 {
@@ -121,19 +121,19 @@ class MbtController extends Controller
         curl_setopt($ch,CURLOPT_HTTPHEADER,$headerArray);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15*60);
         $output = curl_exec($ch);
+        curl_close($ch);
+        
         if ($output === false)
         {
-          echo 'Curl error: ' . curl_error($ch);
+          return null;
         }
-        else
-        {
-            echo PHP_EOL;  
-            echo "\n";
-            $decode_token = json_decode($output,true);
-            $token = $decode_token['data']['access_token'];
-            return  $token;
-        };
-        curl_close($ch);
+        
+        $decode_token = json_decode($output, true);
+        if (isset($decode_token['data']['access_token'])) {
+            return $decode_token['data']['access_token'];
+        }
+        
+        return null;
    }
    
   public function GetFunction($url)
@@ -1334,7 +1334,13 @@ class MbtController extends Controller
   //Get Current Package
   public function GetPackage()
   {
-      $access_token = $this->gettoken(); //get_token  
+      $access_token = $this->gettoken(); //get_token
+      
+      // If no token available, return error
+      if (!$access_token) {
+          return response()->json(['status'=>400,'message'=>'Unable to get access token from external service']);
+      }
+      
       $user_name    = request('user_name');
       $data         = "access_token={$access_token}&user_name={$user_name}";
       $url          = "api/v1/package/users-packages?".$data; 
@@ -1370,7 +1376,9 @@ class MbtController extends Controller
            
       }else
       {
-           return response()->json(['status'=>400,'message'=>$decode['message'],'version'=>$decode['version']]);
+           $message = $decode['message'] ?? 'Unable to get package information';
+           $version = $decode['version'] ?? '';
+           return response()->json(['status'=>400,'message'=>$message,'version'=>$version]);
       }
   
   }
@@ -2552,11 +2560,11 @@ class MbtController extends Controller
     
      public function logo_image(Request $request)
             {   
-              $base_url           = "https://telco.mbt.com.mm/assets/front/app/";
+              $base_url           = "https://isp.mlbbshop.app/assets/front/app/";
               
-              $mbt_profile= DB::table('settings')->select('app_logo')->get();
+              $mbt_profile= DB::table('settings')->select('header_logo')->get();
               $image = json_decode($mbt_profile, true);
-              $header_image = $image['0']['app_logo'];
+              $header_image = $image['0']['header_logo'] ?? '';
             //   dd($header_image);
               
              
@@ -4892,7 +4900,10 @@ class MbtController extends Controller
     
     public function GetNewPackage()
     {
-        $access_token = $this->gettoken(); //get_token  
+        $access_token = $this->gettoken(); //get_token
+        if ($access_token === null) {
+            return response()->json(['status' => 503, 'message' => 'Token service unavailable', 'data' => []]);
+        }
         $user_name    = request('user_name');
         $data         = "access_token={$access_token}&user_name={$user_name}";
         $url          = "api/v1/package/users-packages?".$data; 

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Helpers\Helper;
-use App\User;
-use App\Admin;
-use App\Package;
-use App\SubCompany;
-use App\Billpaid;
-use App\Role;
+use App\Models\User;
+use App\Models\Admin;
+use App\Models\Package;
+use App\Models\SubCompany;
+use App\Models\Billpaid;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
@@ -15,7 +15,7 @@ use DB;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 use Illuminate\Support\Facades\Validator;
-use App\StatusDescription;
+use App\Models\StatusDescription;
 class RegisterUserController extends Controller
 {
     public function __construct()

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Payment\Product;
 
-use App\Product;
-use App\Language;
-use App\Shipping;
-use App\OrderItem;
+use App\Models\Product;
+use App\Models\Language;
+use App\Models\Shipping;
+use App\Models\OrderItem;
 use PayPal\Api\Item;
-use App\Emailsetting;
-use App\ProductOrder;
+use App\Models\Emailsetting;
+use App\Models\ProductOrder;
 use PayPal\Api\Payer;
 use PayPal\Api\Amount;
-use App\PaymentGatewey;
+use App\Models\PaymentGatewey;
 use PayPal\Api\Payment;
 use PayPal\Api\ItemList;
 use Illuminate\Support\Str;
@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 use PayPal\Api\RedirectUrls;
 use Illuminate\Support\Carbon;
 use PayPal\Api\PaymentExecution;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;

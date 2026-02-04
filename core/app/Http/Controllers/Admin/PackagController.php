@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Package;
-use App\Sectiontitle;
-use App\Language;
+use App\Models\Package;
+use App\Models\Sectiontitle;
+use App\Models\Language;
 use Session;
 
 class PackagController extends Controller
@@ -28,7 +28,9 @@ class PackagController extends Controller
 
     // Add slider Category
     public function add(){
-        return view('admin.package.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.package.add', compact('langs', 'currentLang'));
     }
 
     // Store slider Category
@@ -65,10 +67,11 @@ class PackagController extends Controller
 
     // slider Category Edit
     public function edit($ln,$id){
-
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $package = Package::find($id);
      
-        return view('admin.package.edit', compact('package'));
+        return view('admin.package.edit', compact('package', 'langs', 'currentLang'));
 
     }
 

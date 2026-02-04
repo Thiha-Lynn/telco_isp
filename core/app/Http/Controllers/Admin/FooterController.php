@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Setting;
-use App\Language;
+use App\Models\Setting;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
@@ -18,15 +18,19 @@ class FooterController extends Controller
     }
 
     public function index(Request $request){
-
-         $lang = Language::where('code', $request->language)->first()->id;
+        $langCode = $request->language ?? $this->lang->code;
+        $lang = Language::where('code', $langCode)->first();
+        if (!$lang) {
+            $lang = $this->lang;
+        }
+        $langId = $lang->id;
    
-        $footerinfo = Setting::where('language_id', $lang)->first();
+        $footerinfo = Setting::where('language_id', $langId)->first();
 
         return view('admin.footer.index', compact('footerinfo'));
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
 
         $request->validate([

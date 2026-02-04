@@ -3,8 +3,8 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Currency;
-use App\StatusDescription;
+use App\Models\Currency;
+use App\Models\StatusDescription;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 

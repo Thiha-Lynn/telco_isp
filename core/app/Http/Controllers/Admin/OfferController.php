@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Language;
-use App\Offerprovide;
-use App\Sectiontitle;
+use App\Models\Language;
+use App\Models\Offerprovide;
+use App\Models\Sectiontitle;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
@@ -19,18 +19,28 @@ class OfferController extends Controller
     }
 
     public function offer(Request $request){
-        $lang = Language::where('code', $request->language)->first()->id;
+        $langCode = $request->language ?? $this->lang->code;
+        $lang = Language::where('code', $langCode)->first();
+        if (!$lang) {
+            $lang = $this->lang;
+        }
+        $langId = $lang->id;
      
-        $offers = Offerprovide::where('language_id', $lang)->orderBy('id', 'DESC')->get();
+        $offers = Offerprovide::where('language_id', $langId)->orderBy('id', 'DESC')->get();
         
-        $saectiontitle = Sectiontitle::where('language_id', $lang)->first();
+        $saectiontitle = Sectiontitle::where('language_id', $langId)->first();
+        if (!$saectiontitle) {
+            $saectiontitle = Sectiontitle::first() ?? new Sectiontitle(['language_id' => $langId]);
+        }
         
         return view('admin.offer.index', compact('offers', 'saectiontitle'));
     }
 
     // Add slider Category
     public function add(){
-        return view('admin.offer.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.offer.add', compact('langs', 'currentLang'));
     }
 
     // Store slider Category
@@ -54,7 +64,7 @@ class OfferController extends Controller
     }
 
     // slider Category Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $offer = Offerprovide::find($id);
         $offer->delete();
@@ -63,15 +73,15 @@ class OfferController extends Controller
     }
 
     // slider Category Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $offer = Offerprovide::find($id);
-        return view('admin.offer.edit', compact('offer'));
-
+        return view('admin.offer.edit', compact('offer', 'langs', 'currentLang'));
     }
 
     // Update slider Category
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
          $request->validate([

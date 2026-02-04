@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\Language;
-use App\Testimonial;
-use App\Sectiontitle;
+use App\Models\Language;
+use App\Models\Testimonial;
+use App\Models\Sectiontitle;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -33,7 +33,9 @@ class TestimonialController extends Controller
 
     //Add Testimonial
     public function add(){
-        return view('admin.testimonial.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.testimonial.add', compact('langs', 'currentLang'));
     }
 
     // Store Testimonial
@@ -76,7 +78,7 @@ class TestimonialController extends Controller
     }
 
     //Testimonial Delete
-    public function delete($id){
+    public function delete($locale, $id){
        
         $testimonial = Testimonial::find($id);
         @unlink('assets/front/img/'. $testimonial->featured_image);
@@ -86,15 +88,15 @@ class TestimonialController extends Controller
     }
 
     //Service Delete
-    public function edit($id){
-       
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $testimonial = Testimonial::find($id);
-        return view('admin.testimonial.edit', compact('testimonial'));
-    
+        return view('admin.testimonial.edit', compact('testimonial', 'langs', 'currentLang'));
     }
 
     // Testimonial Update
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $request->validate([
             'image' => 'mimes:jpeg,jpg,png',

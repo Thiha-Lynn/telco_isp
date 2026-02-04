@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\PersonalAccessToken;
+use App\Models\PersonalAccessToken;
 use Closure;
 use Illuminate\Http\Request;
 

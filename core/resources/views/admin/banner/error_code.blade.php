@@ -112,7 +112,7 @@
                                              {{$value->chinese_language??'Null'}}
                                         </td>
                                          <td>
-                                         <a  href="{{route('admin.deleteerrormessage',[app()->getLocale(),$value->error_id])}}" title='Delete Banner' class="badge badge-danger"><i class="fas fa-trash"></i> </a>
+                                         <a  href="{{route('admin.deleteerrormessage',[app()->getLocale(),$value->id])}}" title='Delete Banner' class="badge badge-danger"><i class="fas fa-trash"></i> </a>
                                          &nbsp;
                                           <a data-toggle="modal" style="color:white;cursor:pointer;" data-target="#myModal{{$index}}" title='Edit Banner' class="badge badge-primary">{{__('Edit')}} </a>
                                         </td>
@@ -132,7 +132,7 @@
                                             <form action="{{route('admin.editerrormessage',app()->getLocale())}}" method="post" enctype="multipart/form-data" >
                                                 @csrf
                                                <input type="hidden" name="key" value="{{$value->key}}">
-                                                <input type="hidden" name="error_id" value="{{$value->error_id}}">
+                                                <input type="hidden" name="error_id" value="{{$value->id}}">
                                                <div class="row">
                                                 <div class="col-md-6">
                                                 <label class="col-sm-4 control-label">{{ __('Error Key') }}<span class="text-danger">*</span></label>

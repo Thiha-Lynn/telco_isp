@@ -3,34 +3,43 @@
 namespace App\Http\Controllers\Payment\Product;
 
 
-use App\Product;
-use App\Shipping;
-use App\OrderItem;
+use App\Models\Product;
+use App\Models\Shipping;
+use App\Models\OrderItem;
 use Carbon\Carbon;
-use App\Emailsetting;
-use App\ProductOrder;
+use App\Models\Emailsetting;
+use App\Models\ProductOrder;
 use App\Helpers\Helper;
-use App\PaymentGatewey;
+use App\Models\PaymentGatewey;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
-use Cartalyst\Stripe\Laravel\Facades\Stripe;
+use Stripe\Stripe;
+use Stripe\Token;
+use Stripe\Charge;
+use Stripe\Exception\CardException;
 
 class StripeController extends Controller
 {
+    protected string $stripeSecret;
+
     public function __construct()
     {
-        //Set Spripe Keys
+        //Set Stripe Keys
         $data = PaymentGatewey::whereKeyword('stripe')->first();
-        $paydata =$data->convertAutoData();
-        Config::set('services.stripe.key', $paydata["key"]);
-        Config::set('services.stripe.secret', $paydata["secret"]);
+        if ($data) {
+            $paydata = $data->convertAutoData();
+            $this->stripeSecret = $paydata['secret'] ?? '';
+            Config::set('services.stripe.key', $paydata['key'] ?? '');
+            Config::set('services.stripe.secret', $this->stripeSecret);
+            Stripe::setApiKey($this->stripeSecret);
+        }
     }
 
 
@@ -111,10 +120,9 @@ class StripeController extends Controller
         }
 
 
-        $stripe = Stripe::make(Config::get('services.stripe.secret'));
         try {
 
-            $token = $stripe->tokens()->create([
+            $token = Token::create([
                 'card' => [
                     'name' => $request->fullname,
                     'number' => $request->card_number,
@@ -124,7 +132,7 @@ class StripeController extends Controller
                 ],
             ]);
 
-            if (!isset($token['id'])) {
+            if (!isset($token->id)) {
                 $notification = array(
                     'messege' => 'Token Problem With Your Token.',
                     'alert' => 'error'
@@ -132,16 +140,16 @@ class StripeController extends Controller
                 return redirect()->back()->with('notification', $notification);
             }
 
-            $charge = $stripe->charges()->create([
-                'card' => $token['id'],
-                'currency' =>  Helper::showCurrencyCode(),
-                'amount' => $total,
+            $charge = Charge::create([
+                'source' => $token->id,
+                'currency' => strtolower(Helper::showCurrencyCode()),
+                'amount' => (int)($total * 100),
                 'description' => $title,
             ]);
 
 
 
-            if ($charge['status'] == 'succeeded') {
+            if ($charge->status == 'succeeded') {
 
                 $order = new ProductOrder;
                 
@@ -169,8 +177,8 @@ class StripeController extends Controller
                 $order->currency_code = 'USD';
                 $order->order_number = Str::random(4). time();
                 $order->payment_status = 'Completed';
-                $order['txnid'] = $charge['balance_transaction'];
-                $order['charge_id'] = $charge['id'];
+                $order['txnid'] = $charge->balance_transaction;
+                $order['charge_id'] = $charge->id;
 
                 $order->save();
                 $order_id = $order->id;
@@ -277,19 +285,19 @@ class StripeController extends Controller
 
                 return redirect($success_url);
             }
+        } catch (CardException $e) {
+            $notification = array(
+                'messege' => $e->getMessage(),
+                'alert' => 'warning'
+            );
+            return redirect()->back()->with('notification', $notification);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            $notification = array(
+                'messege' => $e->getMessage(),
+                'alert' => 'warning'
+            );
+            return redirect()->back()->with('notification', $notification);
         } catch (Exception $e) {
-            $notification = array(
-                'messege' => $e->getMessage(),
-                'alert' => 'warning'
-            );
-            return redirect()->back()->with('notification', $notification);
-        } catch (\Cartalyst\Stripe\Exception\CardErrorException $e) {
-            $notification = array(
-                'messege' => $e->getMessage(),
-                'alert' => 'warning'
-            );
-            return redirect()->back()->with('notification', $notification);
-        } catch (\Cartalyst\Stripe\Exception\MissingParameterException $e) {
             $notification = array(
                 'messege' => 'Please Enter Valid Credit Card Informations.',
                 'alert' => 'warning'

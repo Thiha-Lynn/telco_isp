@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Session;
-use App\About;
-use App\Language;
-use App\Sectiontitle;
+use App\Models\About;
+use App\Models\Language;
+use App\Models\Sectiontitle;
 use Illuminate\Http\Request;
 use Mews\Purifier\Facades\Purifier;
 use App\Http\Controllers\Controller;
@@ -35,7 +35,9 @@ class AboutController extends Controller
 
     // Add slider Category
     public function add(){
-        return view('admin.about.add');
+        $langs = Language::all();
+        $currentLang = $this->lang;
+        return view('admin.about.add', compact('langs', 'currentLang'));
     }
 
     // Store slider Category
@@ -55,7 +57,7 @@ class AboutController extends Controller
     }
 
     // slider Category Delete
-    public function delete($id){
+    public function delete($locale, $id){
 
         $about = About::find($id);
         $about->delete();
@@ -64,15 +66,23 @@ class AboutController extends Controller
     }
 
     // slider Category Edit
-    public function edit($id){
-
+    public function edit($locale, $id){
+        $langs = Language::all();
+        $currentLang = $this->lang;
         $about = About::find($id);
-        return view('admin.about.edit', compact('about'));
+        if (!$about) {
+            $notification = array(
+                'messege' => 'About record not found!',
+                'alert' => 'warning'
+            );
+            return redirect()->route('admin.about', app()->getLocale())->with('notification', $notification);
+        }
+        return view('admin.about.edit', compact('about', 'langs', 'currentLang'));
 
     }
 
     // Update slider Category
-    public function update(Request $request, $id){
+    public function update(Request $request, $locale, $id){
 
         $id = $request->id;
         $request->validate([
@@ -97,9 +107,9 @@ class AboutController extends Controller
         }
         $langId = $lang->id;
         
-        $setting = \App\Setting::where('language_id', $langId)->first();
+        $setting = \App\Models\Setting::where('language_id', $langId)->first();
         if (!$setting) {
-            $setting = \App\Setting::first();
+            $setting = \App\Models\Setting::first();
         }
         
         return view('admin.about.contact-info', compact('setting'));
@@ -113,7 +123,7 @@ class AboutController extends Controller
             'address' => 'required',
         ]);
 
-        $setting = \App\Setting::first();
+        $setting = \App\Models\Setting::first();
         $setting->number = $request->number;
         $setting->email = $request->email;
         $setting->contactemail = $request->contactemail;

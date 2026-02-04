@@ -2,12 +2,12 @@
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller; 
-use App\PaymentQuery;
-use App\MbtBindUser;
-use App\PaymentGatewey;
-use App\SubCompany;
-use App\User;
-use App\Setting;
+use App\Models\PaymentQuery;
+use App\Models\MbtBindUser;
+use App\Models\PaymentGatewey;
+use App\Models\SubCompany;
+use App\Models\User;
+use App\Models\Setting;
 
 class MbtController extends Controller
 {

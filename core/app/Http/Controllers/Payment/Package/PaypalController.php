@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Payment\Package;
 
-use App\Billpaid;
+use App\Models\Billpaid;
 use App\Helpers\Helper;
-use App\Package;
+use App\Models\Package;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Packageorder;
+use App\Models\Packageorder;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Str;
-use Barryvdh\DomPDF\Facade as PDF;
-use App\Emailsetting;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use App\Models\Emailsetting;
 use Carbon\Carbon;
-use App\PaymentGatewey;
-use App\Setting;
-use App\User;
+use App\Models\PaymentGatewey;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use PayPal\{
     Api\Item,

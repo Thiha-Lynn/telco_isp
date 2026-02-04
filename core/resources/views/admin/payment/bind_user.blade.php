@@ -147,9 +147,9 @@
                                         <td>{{date('d M Y H:i:s',$value->user_create_time)}}</td>
                                         <td>{{date('d M Y H:i:s',$value->user_start_time)}}</td>
                                         <td><a class="details" data-toggle="modal" data-target="#myuser_model{{$value->er_id}}" >{{$value->er_id}}</a></td>
-                                        <td>{{App\SubCompany::find($value->Sub_company)->company_name}}</td>
+                                        <td>{{ optional(App\Models\SubCompany::find($value->Sub_company))->company_name ?? 'N/A' }}</td>
                                         <td><?php 
-                                         if($value->user_status == 0)
+                                         if(($value->user_status_mbt ?? 0) == 0)
                                          {
                                             $status = "<b class='badge badge-warning'>Normal</b>"; 
                                          }else

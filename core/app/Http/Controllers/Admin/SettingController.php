@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use Validator;
-use App\Setting;
-use App\Language;
+use App\Models\Setting;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use DB;
-use App\BankSetting;
-use App\PaymentGatewey;
+use App\Models\BankSetting;
+use App\Models\PaymentGatewey;
 
 class SettingController extends Controller
 {

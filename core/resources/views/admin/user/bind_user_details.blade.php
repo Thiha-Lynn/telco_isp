@@ -38,9 +38,9 @@
                               <div class="col-md-6">
                                   <ul class="list-group">
                                      
-                                      <li class="list-group-item">{{__('Register phone')}} <span class="badge">{{App\User::Where('bind_user_id',$names)->first()->phone??''}}</span></li>
+                                      <li class="list-group-item">{{__('Register phone')}} <span class="badge">{{App\Models\User::Where('bind_user_id',$names)->first()->phone??''}}</span></li>
                                       <li class="list-group-item">{{__('Register date')}} <span class="badge">{{date('d M Y H:i:s',$bind_user->user_create_time)}}</span></li>
-                                      <li class="list-group-item">{{__('Name')}} <span class="badge">{{App\User::Where('bind_user_id',$names)->first()->name??''}}</span></li>
+                                      <li class="list-group-item">{{__('Name')}} <span class="badge">{{App\Models\User::Where('bind_user_id',$names)->first()->name??''}}</span></li>
                                       <!--<li class="list-group-item">{{__('Login Password')}} <span class="badge">XXXXXXXX</span></li>-->
                                       <li class="list-group-item">{{__('MBT Account ID')}} <span class="badge">{{$bind_user->user_name}}</span></li>
                                       <li class="list-group-item">{{__('Install address')}} <span class="badge">{{$bind_user->user_address}}</span></li>

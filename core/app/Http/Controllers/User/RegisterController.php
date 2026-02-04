@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\User;
 
-use App\User;
-use App\Language;
-use App\Emailsetting;
+use App\Models\User;
+use App\Models\Language;
+use App\Models\Emailsetting;
 use App\Helpers\MailSend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

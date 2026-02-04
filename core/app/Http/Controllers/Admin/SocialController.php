@@ -4,13 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Social;
+use App\Models\Social;
 use Session;
 
 class SocialController extends Controller
 {
     //  Socila Links
     public function slinks(){
+        $slinks = Social::all();
+        return view('admin.settings.social.index', compact('slinks'));
+    }
+
+    // Add Social Link Page (redirects to index with add form)
+    public function addSlinks(){
         $slinks = Social::all();
         return view('admin.settings.social.index', compact('slinks'));
     }
@@ -35,13 +41,13 @@ class SocialController extends Controller
     }
 
     // Edit Social Links
-    public function editSlinks($id){
+    public function editSlinks($locale, $id){
         $slink = Social::findOrFail($id);
         return view('admin.settings.social.edit', compact('slink'));
     }
 
     // Update Social Links
-    public function updateSlinks(Request $request, $id){
+    public function updateSlinks(Request $request, $locale, $id){
 
         $request->validate([
             'icon' => 'required',
@@ -61,7 +67,7 @@ class SocialController extends Controller
     }    
 
     // Delete Social Links
-    public function deleteSlinks($id){
+    public function deleteSlinks($locale, $id){
 
         $slink = Social::findOrFail($id);
         $slink->delete();

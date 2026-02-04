@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Backup;
+use App\Models\Backup;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
@@ -43,7 +43,7 @@ class BackupController extends Controller
         return response()->download('core/storage/app/public/'.$request->filename, 'backup.sql');
     }
 
-    public function delete($id) {
+    public function delete($locale, $id) {
         $backup = Backup::find($id);
         @unlink('core/storage/app/public/'.$backup->filename);
         $backup->delete();

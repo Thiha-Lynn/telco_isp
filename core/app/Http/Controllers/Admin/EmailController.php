@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Classes\GeniusMailer;
-use App\EmailTemplate;
-use App\Emailsetting;
+use App\Models\EmailTemplate;
+use App\Models\Emailsetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -62,13 +61,13 @@ class EmailController extends Controller
         return redirect()->back()->with('notification', $notification);
     }
 
-    public function edit($id)
+    public function edit($locale, $id)
     {
         $template = EmailTemplate::findOrFail($id);
         return view('admin.email.edit', compact('template'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $locale, $id)
     {
         $request->validate([
             'email_subject' => 'required',

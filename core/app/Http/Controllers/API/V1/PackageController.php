@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponse;
-use App\Package;
-use App\Packageorder;
-use App\MbtBindUser;
+use App\Models\Package;
+use App\Models\Packageorder;
+use App\Models\MbtBindUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
